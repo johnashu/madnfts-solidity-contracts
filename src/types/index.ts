@@ -94,6 +94,8 @@ export type { MADFactory1155 } from "./contracts/MADFactory1155";
 export { MADFactory1155__factory } from "./factories/contracts/MADFactory1155__factory";
 export type { MADFactory721 } from "./contracts/MADFactory721";
 export { MADFactory721__factory } from "./factories/contracts/MADFactory721__factory";
+export type { MADFactoryBase } from "./contracts/MADFactoryBase";
+export { MADFactoryBase__factory } from "./factories/contracts/MADFactoryBase__factory";
 export type { MADMarketplace1155 } from "./contracts/MADMarketplace1155";
 export { MADMarketplace1155__factory } from "./factories/contracts/MADMarketplace1155__factory";
 export type { MADMarketplace721 } from "./contracts/MADMarketplace721";

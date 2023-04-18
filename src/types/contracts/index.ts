@@ -12,6 +12,7 @@ export type { lib };
 export type { MAD } from "./MAD";
 export type { MADFactory1155 } from "./MADFactory1155";
 export type { MADFactory721 } from "./MADFactory721";
+export type { MADFactoryBase } from "./MADFactoryBase";
 export type { MADMarketplace1155 } from "./MADMarketplace1155";
 export type { MADMarketplace721 } from "./MADMarketplace721";
 export type { MADMarketplaceBase } from "./MADMarketplaceBase";

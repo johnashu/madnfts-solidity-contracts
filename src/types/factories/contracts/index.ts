@@ -6,6 +6,7 @@ export * as lib from "./lib";
 export { MAD__factory } from "./MAD__factory";
 export { MADFactory1155__factory } from "./MADFactory1155__factory";
 export { MADFactory721__factory } from "./MADFactory721__factory";
+export { MADFactoryBase__factory } from "./MADFactoryBase__factory";
 export { MADMarketplace1155__factory } from "./MADMarketplace1155__factory";
 export { MADMarketplace721__factory } from "./MADMarketplace721__factory";
 export { MADMarketplaceBase__factory } from "./MADMarketplaceBase__factory";

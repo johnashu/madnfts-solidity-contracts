@@ -193,6 +193,10 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.MADFactory721__factory>;
     getContractFactory(
+      name: "MADFactoryBase",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.MADFactoryBase__factory>;
+    getContractFactory(
       name: "MADMarketplace1155",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.MADMarketplace1155__factory>;
@@ -438,6 +442,11 @@ declare module "hardhat/types/runtime" {
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.MADFactory721>;
+    getContractAt(
+      name: "MADFactoryBase",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.MADFactoryBase>;
     getContractAt(
       name: "MADMarketplace1155",
       address: string,
