@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 
-pragma solidity 0.8.16;
+pragma solidity 0.8.19;
 
-import { ERC1155B, ERC1155TokenReceiver } from "../tokens/ERC1155/Base/ERC1155B.sol";
+import { ERC1155B, ERC1155TokenReceiver } from "contracts/lib/tokens/ERC1155/Base/ERC1155B.sol";
 
-import { Owned } from "../auth/Owned.sol";
+import { Owned } from "contracts/lib/auth/Owned.sol";
 
 contract MockERC1155 is ERC1155B, ERC1155TokenReceiver, Owned(msg.sender) {
     constructor() {}

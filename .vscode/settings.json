@@ -1,5 +1,5 @@
 {
-  "solidity.compileUsingRemoteVersion": "v0.8.16+commit.07a7930e",
-  "solidity.compileUsingLocalVersion": "/media/vphu/Development/madnfts-solidity-contracts/soljson-v0.8.16+commit.07a7930e.js",
+  "solidity.compileUsingRemoteVersion": "v0.8.18+commit.07a7930e",
+  "solidity.compileUsingLocalVersion": "/media/vphu/Development/madnfts-solidity-contracts/soljson-v0.8.18+commit.07a7930e.js",
   "solidity.defaultCompiler": "localNodeModule"
 }

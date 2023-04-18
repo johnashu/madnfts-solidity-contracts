@@ -42,7 +42,7 @@
     "eslint-config-prettier": "^8.5.0",
     "ethers": "^5.6.8",
     "fs-extra": "^10.1.0",
-    "hardhat": "^2.9.9",
+    "hardhat": "^2.14.0",
     "hardhat-gas-reporter": "^1.0.8",
     "hardhat-tracer": "^2.2.2",
     "husky": "^8.0.1",
@@ -96,6 +96,7 @@
     "lint:ts": "eslint --config ./.eslintrc.yaml --ignore-path ./.eslintignore --ext .js,.ts ."
   },
   "dependencies": {
+    "solc": "^0.8.19",
     "yargs": "^17.6.0"
   }
 }

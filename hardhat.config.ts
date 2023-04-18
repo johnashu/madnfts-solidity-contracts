@@ -161,7 +161,7 @@ const config: HardhatUserConfig = {
   },
 
   // solidity: {
-  //   version: "0.8.16",
+  //   version: "0.8.19",
   //   settings: {
   //     metadata: {
   //       bytecodeHash: "none",
@@ -173,7 +173,7 @@ const config: HardhatUserConfig = {
   //   },
   // },
   solidity: {
-    version: "0.8.16",
+    version: "0.8.19",
     settings: {
       viaIR: true,
       optimizer: {

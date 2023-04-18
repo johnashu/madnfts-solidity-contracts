@@ -4,10 +4,10 @@
 /// @author Modified from OpenZeppelin Contracts
 /// (https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/finance/PaymentSplitter.sol)
 
-pragma solidity 0.8.16;
+pragma solidity 0.8.19;
 
-import { SplitterEventsAndErrors } from "./SplitterEventsAndErrors.sol";
-import "../utils/SafeTransferLib.sol";
+import { SplitterEventsAndErrors } from "contracts/lib/splitter/SplitterEventsAndErrors.sol";
+import "contracts/lib/utils/SafeTransferLib.sol";
 
 // prettier-ignore
 

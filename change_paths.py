@@ -15,7 +15,7 @@ def replace_import_paths(file_path):
 
 def process_files():
     folder = pathlib.Path('contracts')
-    for file_path in folder.glob('*.sol'):
+    for file_path in folder.rglob('*.sol'):
         replace_import_paths(file_path)
 
 if __name__ == '__main__':

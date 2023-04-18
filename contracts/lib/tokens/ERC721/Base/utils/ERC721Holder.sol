@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 
-pragma solidity 0.8.16;
+pragma solidity 0.8.19;
 
 /// @author Modified from OpenZeppelin Contracts
 /// (https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC721/utils/ERC721Holder.sol)
 
-import { ERC721TokenReceiver } from "../ERC721.sol";
+import { ERC721TokenReceiver } from "contracts/lib/tokens/ERC721/Base/ERC721.sol";
 
 contract ERC721Holder is ERC721TokenReceiver {
     /// @dev Implementation of the {ERC721Receiver} abstract contract.

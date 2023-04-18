@@ -1,18 +1,18 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 
-pragma solidity 0.8.16;
+pragma solidity 0.8.19;
 
-import { ERC1155BasicEventsAndErrors } from "../Base/interfaces/ERC1155EventAndErrors.sol";
-import { ERC1155B as ERC1155, ERC1155TokenReceiver } from "../Base/ERC1155B.sol";
-import { ERC2981 } from "../../common/ERC2981.sol";
-import { ERC20 } from "../../ERC20.sol";
-import { Owned } from "../../../auth/Owned.sol";
-import { ReentrancyGuard } from "../../../security/ReentrancyGuard.sol";
-import { SplitterImpl } from "../../../splitter/SplitterImpl.sol";
-import { Counters } from "../../../utils/Counters.sol";
-import { Strings } from "../../../utils/Strings.sol";
-import { SafeTransferLib } from "../../../utils/SafeTransferLib.sol";
-import { FeeOracle } from "../../common/FeeOracle.sol";
+import { ERC1155BasicEventsAndErrors } from "contracts/lib/tokens/ERC1155/Base/interfaces/ERC1155EventAndErrors.sol";
+import { ERC1155B as ERC1155, ERC1155TokenReceiver } from "contracts/lib/tokens/ERC1155/Base/ERC1155B.sol";
+import { ERC2981 } from "contracts/lib/tokens/common/ERC2981.sol";
+import { ERC20 } from "contracts/lib/tokens/ERC20.sol";
+import { Owned } from "contracts/lib/auth/Owned.sol";
+import { ReentrancyGuard } from "contracts/lib/security/ReentrancyGuard.sol";
+import { SplitterImpl } from "contracts/lib/splitter/SplitterImpl.sol";
+import { Counters } from "contracts/lib/utils/Counters.sol";
+import { Strings } from "contracts/lib/utils/Strings.sol";
+import { SafeTransferLib } from "contracts/lib/utils/SafeTransferLib.sol";
+import { FeeOracle } from "contracts/lib/tokens/common/FeeOracle.sol";
 
 contract ERC1155Basic is ERC1155, ERC2981, ERC1155BasicEventsAndErrors, ERC1155TokenReceiver, Owned, ReentrancyGuard {
     using Counters for Counters.Counter;

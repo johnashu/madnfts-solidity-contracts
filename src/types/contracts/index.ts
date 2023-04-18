@@ -3,18 +3,19 @@
 /* tslint:disable */
 
 /* eslint-disable */
-import type * as eventsAndErrorsSol from "./EventsAndErrors.sol";
+import type * as factory from "./Factory";
+import type * as marketplace from "./Marketplace";
+import type * as router from "./Router";
+import type * as shared from "./Shared";
 import type * as lib from "./lib";
 
-export type { eventsAndErrorsSol };
+export type { factory };
+
+export type { marketplace };
+
+export type { router };
+
+export type { shared };
 
 export type { lib };
 export type { MAD } from "./MAD";
-export type { MADFactory1155 } from "./MADFactory1155";
-export type { MADFactory721 } from "./MADFactory721";
-export type { MADFactoryBase } from "./MADFactoryBase";
-export type { MADMarketplace1155 } from "./MADMarketplace1155";
-export type { MADMarketplace721 } from "./MADMarketplace721";
-export type { MADMarketplaceBase } from "./MADMarketplaceBase";
-export type { MADRouter1155 } from "./MADRouter1155";
-export type { MADRouter721 } from "./MADRouter721";

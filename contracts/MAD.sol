@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 
-pragma solidity 0.8.16;
+pragma solidity 0.8.19;
 
 ///     ...     ..      ..                    ..
 ///   x*8888x.:*8888: -"888:                dF
@@ -13,7 +13,7 @@ pragma solidity 0.8.16;
 ///    dx '88~x. !88~  8888>   9888  9888   888E  888F
 ///  .8888Xf.888x:!    X888X.: 9888  9888  .888N..888
 /// :""888":~"888"     `888*"  "888*""888"  `"888*""
-///     "~'    "~        ""     ^Y"   ^Y'      ""     MADNFTs © 2022.
+///     "~'    "~        ""     ^Y"   ^Y'      ""     MADNFTs © 2023.
 
 /// GNU AFFERO GENERAL PUBLIC LICENSE
 /// Version 3, 19 November 2007

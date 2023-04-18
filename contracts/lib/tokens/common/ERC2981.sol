@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 
-pragma solidity 0.8.16;
+pragma solidity 0.8.19;
 
 //// @title Minimal ERC2981 (NFT Royalty Standard) implementation.
 //// @author Modified from exp.table (https://etherscan.io/address/0x0faed6ddef3773f3ee5828383aaeeaca2a94564a#code)

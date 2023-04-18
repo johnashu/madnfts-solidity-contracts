@@ -4,7 +4,7 @@
 /// @author Solady (https://github.com/vectorized/solady/blob/main/src/utils/LibString.sol)
 /// @author Modified from Solmate (https://github.com/Rari-Capital/solmate/blob/main/src/utils/LibString.sol)
 
-pragma solidity 0.8.16;
+pragma solidity 0.8.19;
 
 library Strings {
     /// @dev Converts a `uint256` to its ASCII `string` decimal representation.

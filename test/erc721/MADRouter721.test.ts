@@ -61,7 +61,7 @@ describe("MADRouter721", () => {
 
       // check each global var
       expect(await r721.callStatic.name()).to.eq("router");
-      expect(await r721.MADFactory721()).to.eq(f721.address);
+      expect(await r721.madFactory()).to.eq(f721.address);
     });
   });
   describe("Set baseURI", async () => {

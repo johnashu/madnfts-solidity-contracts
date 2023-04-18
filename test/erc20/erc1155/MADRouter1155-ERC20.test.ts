@@ -71,7 +71,7 @@ describe("MADRouter1155 - ERC20", () => {
 
       // check each global var
       expect(await r1155.callStatic.name()).to.eq("router");
-      expect(await r1155.MADFactory1155()).to.eq(
+      expect(await r1155.madFactory()).to.eq(
         f1155.address,
       );
       expect(await r1155.callStatic.erc20()).to.eq(

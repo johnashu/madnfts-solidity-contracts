@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 
-pragma solidity 0.8.16;
+pragma solidity 0.8.19;
 
-import { ERC2981 } from "../tokens/common/ERC2981.sol";
-import { Owned } from "../auth/Owned.sol";
+import { ERC2981 } from "contracts/lib/tokens/common/ERC2981.sol";
+import { Owned } from "contracts/lib/auth/Owned.sol";
 
 contract MockERC2981 is ERC2981, Owned(msg.sender) {
     event RoyaltyRecipientSet(address indexed newRecipient);
