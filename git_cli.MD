@@ -41,17 +41,10 @@ git push origin release/1.0
 ## Fetch the changes from the GitHub repository using the git fetch command with the remote repository name and branch name. For example:
 
 `git fetch origin`
+`git fetch github`
 
 `git fetch github main`
-
-`git checkout github/main`
-
-`git merge origin release/1.0`
+`git fetch github release/1.0`
 
 `git push github release/1.0`
-
 `git push github main`
-
-
-0.8.19
-It also contains a fix for a long-standing bug that can result in code that is only used in creation code to also be included in runtime bytecode.

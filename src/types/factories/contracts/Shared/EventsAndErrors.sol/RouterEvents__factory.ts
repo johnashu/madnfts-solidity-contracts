@@ -37,7 +37,7 @@ const _abi = [
         type: "string",
       },
     ],
-    name: "BaseURI",
+    name: "BaseURISet",
     type: "event",
   },
   {

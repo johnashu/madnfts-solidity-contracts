@@ -112,10 +112,10 @@ Fee counter.
 | ---- | ------- | ----------- |
 | \_0  | uint256 | undefined   |
 
-### getMintCount
+### mintCount
 
 ```solidity
-function getMintCount() external view returns (uint256)
+function mintCount() external view returns (uint256)
 ```
 
 #### Returns
@@ -417,10 +417,10 @@ function setPublicMintState(bool _publicMintState) external nonpayable
 | ----------------- | ---- | ----------- |
 | \_publicMintState | bool | undefined   |
 
-### setURI
+### setBaseURI
 
 ```solidity
-function setURI(string __uri) external nonpayable
+function setBaseURI(string __uri) external nonpayable
 ```
 
 #### Parameters
@@ -690,10 +690,10 @@ error PublicMintClosed()
 
 _0x2d0a3f8e_
 
-### UriLocked
+### BaseURILocked
 
 ```solidity
-error UriLocked()
+error BaseURILocked()
 ```
 
 _?_

@@ -1093,7 +1093,7 @@
 //         acc01.address,
 //         5,
 //       );
-//       const mintCounter = await wl.callStatic.getMintCount();
+//       const mintCounter = await wl.callStatic.mintCount();
 
 //       expect(tx).to.be.ok;
 //       expect(bal1).to.eq(0);
@@ -1424,7 +1424,7 @@
 //     });
 
 //     it("Should query mint count", async () => {
-//       const tx = await wl.callStatic.getMintCount();
+//       const tx = await wl.callStatic.mintCount();
 //       expect(tx).to.be.ok;
 //       expect(tx).to.eq(0);
 //     });

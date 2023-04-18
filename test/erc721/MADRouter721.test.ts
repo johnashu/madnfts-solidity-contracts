@@ -112,7 +112,7 @@ describe("MADRouter721", () => {
         r721.connect(acc02).setBase(basic.address, "null"),
       ).to.be.revertedWithCustomError(
         basic,
-        RouterErrors.UriLocked,
+        RouterErrors.URILocked,
       );
     });
     it("Should set baseURI for 721Basic collection type", async () => {
@@ -155,11 +155,9 @@ describe("MADRouter721", () => {
 
       expect(tx).to.be.ok;
       await expect(tx)
-        .to.emit(r721, "BaseURI")
+        .to.emit(r721, "BaseURISet")
         .withArgs(colID, "null");
-      expect(await basic.callStatic.getBaseURI()).to.eq(
-        "null",
-      );
+      expect(await basic.callStatic.baseURI()).to.eq("null");
       const verArt = await artifacts.readArtifact(
         "FactoryVerifier",
       );

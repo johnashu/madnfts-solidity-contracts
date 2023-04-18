@@ -424,10 +424,10 @@ _Event emitted by token contract. Function Sighash := 0x17f9fad1_
 | \_token  | address | 1155 token address.  |
 | \_signer | address | New signers address. |
 
-### setURI
+### setBaseURI
 
 ```solidity
-function setURI(address _token, string _uri) external nonpayable
+function setBaseURI(address _token, string _uri) external nonpayable
 ```
 
 Collection baseURI setter.
@@ -505,7 +505,7 @@ _Leave `_token` param empty for withdrawing eth only. No withdraw min needs to b
 
 ## Events
 
-### BaseURI
+### baseURI
 
 ```solidity
 event BaseURI(bytes32 indexed _id, string indexed _baseURI)

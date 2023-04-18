@@ -2,7 +2,7 @@
 
 ## Events
 
-### BaseURI
+### baseURI
 
 ```solidity
 event BaseURI(bytes32 indexed _id, string indexed _baseURI)

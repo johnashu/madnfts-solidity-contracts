@@ -734,7 +734,7 @@
 //       const approved2 = await wl.callStatic.getApproved(2);
 //       const approved3 = await wl.callStatic.getApproved(3);
 //       const approved4 = await wl.callStatic.getApproved(4);
-//       const mintCounter = await wl.callStatic.getMintCount();
+//       const mintCounter = await wl.callStatic.mintCount();
 
 //       expect(tx).to.be.ok;
 //       expect(bal1).to.eq(1);
@@ -766,11 +766,11 @@
 //         .connect(owner)
 //         .approve(wl.address, price.mul(amount));
 //       await wl.mint(4);
-//       const base = await wl.callStatic.getBaseURI();
+//       const base = await wl.callStatic.baseURI();
 //       const sup = await wl.callStatic.totalSupply();
 //       await wl.burn([1, 2], owner.address);
 //       await wl.setBaseURI(res);
-//       const base2 = await wl.callStatic.getBaseURI();
+//       const base2 = await wl.callStatic.baseURI();
 
 //       const sup2 = await wl.callStatic.totalSupply();
 //       expect(base).to.be.ok;
@@ -796,7 +796,7 @@
 //     });
 
 //     it("Should query mint count", async () => {
-//       const tx = await wl.callStatic.getMintCount();
+//       const tx = await wl.callStatic.mintCount();
 //       expect(tx).to.be.ok;
 //       expect(tx).to.eq(0);
 //     });

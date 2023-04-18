@@ -9,7 +9,7 @@ import type {
   TypedListener,
   OnEvent,
   PromiseOrValue,
-} from "../../../../../common";
+} from "../../../common";
 import type {
   FunctionFragment,
   Result,
@@ -30,30 +30,32 @@ import type {
   utils,
 } from "ethers";
 
-export interface ERC721BasicInterface extends utils.Interface {
+export interface ERC1155BasicInterface extends utils.Interface {
   functions: {
-    "approve(address,uint256)": FunctionFragment;
-    "balanceOf(address)": FunctionFragment;
-    "baseURILock()": FunctionFragment;
-    "burn(uint256[],address)": FunctionFragment;
+    "balanceOf(address,uint256)": FunctionFragment;
+    "balanceOfBatch(address[],uint256[])": FunctionFragment;
+    "baseURI()": FunctionFragment;
+    "burn(address[],uint256[],uint256[],address)": FunctionFragment;
+    "burnBatch(address,uint256[],uint256[],address)": FunctionFragment;
     "erc20()": FunctionFragment;
     "feeCount()": FunctionFragment;
-    "getApproved(uint256)": FunctionFragment;
-    "getBaseURI()": FunctionFragment;
-    "getMintCount()": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
+    "liveSupply()": FunctionFragment;
     "maxSupply()": FunctionFragment;
-    "mint(uint256)": FunctionFragment;
-    "mintTo(address,uint256,address)": FunctionFragment;
-    "name()": FunctionFragment;
-    "onERC721Received(address,address,uint256,bytes)": FunctionFragment;
+    "mint(uint256,uint256)": FunctionFragment;
+    "mintBatch(uint256[],uint256[])": FunctionFragment;
+    "mintBatchTo(address,uint256[],uint256[],address)": FunctionFragment;
+    "mintCount()": FunctionFragment;
+    "mintTo(address,uint256,uint256[],address)": FunctionFragment;
+    "onERC1155BatchReceived(address,address,uint256[],uint256[],bytes)": FunctionFragment;
+    "onERC1155Received(address,address,uint256,uint256,bytes)": FunctionFragment;
     "owner()": FunctionFragment;
-    "ownerOf(uint256)": FunctionFragment;
+    "ownerOf(uint256,address)": FunctionFragment;
     "price()": FunctionFragment;
     "publicMintState()": FunctionFragment;
     "royaltyInfo(uint256,uint256)": FunctionFragment;
-    "safeTransferFrom(address,address,uint256)": FunctionFragment;
-    "safeTransferFrom(address,address,uint256,bytes)": FunctionFragment;
+    "safeBatchTransferFrom(address,address,uint256[],uint256[],bytes)": FunctionFragment;
+    "safeTransferFrom(address,address,uint256,uint256,bytes)": FunctionFragment;
     "setApprovalForAll(address,bool)": FunctionFragment;
     "setBaseURI(string)": FunctionFragment;
     "setBaseURILock()": FunctionFragment;
@@ -61,38 +63,39 @@ export interface ERC721BasicInterface extends utils.Interface {
     "setPublicMintState(bool)": FunctionFragment;
     "splitter()": FunctionFragment;
     "supportsInterface(bytes4)": FunctionFragment;
-    "symbol()": FunctionFragment;
-    "tokenURI(uint256)": FunctionFragment;
     "totalSupply()": FunctionFragment;
-    "transferFrom(address,address,uint256)": FunctionFragment;
+    "uri(uint256)": FunctionFragment;
+    "uriLock()": FunctionFragment;
     "withdraw(address)": FunctionFragment;
     "withdrawERC20(address,address)": FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
-      | "approve"
       | "balanceOf"
-      | "baseURILock"
+      | "balanceOfBatch"
+      | "baseURI"
       | "burn"
+      | "burnBatch"
       | "erc20"
       | "feeCount"
-      | "getApproved"
-      | "getBaseURI"
-      | "getMintCount"
       | "isApprovedForAll"
+      | "liveSupply"
       | "maxSupply"
       | "mint"
+      | "mintBatch"
+      | "mintBatchTo"
+      | "mintCount"
       | "mintTo"
-      | "name"
-      | "onERC721Received"
+      | "onERC1155BatchReceived"
+      | "onERC1155Received"
       | "owner"
       | "ownerOf"
       | "price"
       | "publicMintState"
       | "royaltyInfo"
-      | "safeTransferFrom(address,address,uint256)"
-      | "safeTransferFrom(address,address,uint256,bytes)"
+      | "safeBatchTransferFrom"
+      | "safeTransferFrom"
       | "setApprovalForAll"
       | "setBaseURI"
       | "setBaseURILock"
@@ -100,67 +103,94 @@ export interface ERC721BasicInterface extends utils.Interface {
       | "setPublicMintState"
       | "splitter"
       | "supportsInterface"
-      | "symbol"
-      | "tokenURI"
       | "totalSupply"
-      | "transferFrom"
+      | "uri"
+      | "uriLock"
       | "withdraw"
       | "withdrawERC20"
   ): FunctionFragment;
 
   encodeFunctionData(
-    functionFragment: "approve",
+    functionFragment: "balanceOf",
     values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
-    functionFragment: "balanceOf",
-    values: [PromiseOrValue<string>]
+    functionFragment: "balanceOfBatch",
+    values: [PromiseOrValue<string>[], PromiseOrValue<BigNumberish>[]]
   ): string;
-  encodeFunctionData(
-    functionFragment: "baseURILock",
-    values?: undefined
-  ): string;
+  encodeFunctionData(functionFragment: "baseURI", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "burn",
-    values: [PromiseOrValue<BigNumberish>[], PromiseOrValue<string>]
+    values: [
+      PromiseOrValue<string>[],
+      PromiseOrValue<BigNumberish>[],
+      PromiseOrValue<BigNumberish>[],
+      PromiseOrValue<string>
+    ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "burnBatch",
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<BigNumberish>[],
+      PromiseOrValue<BigNumberish>[],
+      PromiseOrValue<string>
+    ]
   ): string;
   encodeFunctionData(functionFragment: "erc20", values?: undefined): string;
   encodeFunctionData(functionFragment: "feeCount", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "getApproved",
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getBaseURI",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getMintCount",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
     functionFragment: "isApprovedForAll",
     values: [PromiseOrValue<string>, PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "liveSupply",
+    values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "maxSupply", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "mint",
-    values: [PromiseOrValue<BigNumberish>]
+    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]
   ): string;
+  encodeFunctionData(
+    functionFragment: "mintBatch",
+    values: [PromiseOrValue<BigNumberish>[], PromiseOrValue<BigNumberish>[]]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "mintBatchTo",
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<BigNumberish>[],
+      PromiseOrValue<BigNumberish>[],
+      PromiseOrValue<string>
+    ]
+  ): string;
+  encodeFunctionData(functionFragment: "mintCount", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "mintTo",
     values: [
       PromiseOrValue<string>,
       PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>[],
       PromiseOrValue<string>
     ]
   ): string;
-  encodeFunctionData(functionFragment: "name", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "onERC721Received",
+    functionFragment: "onERC1155BatchReceived",
     values: [
       PromiseOrValue<string>,
       PromiseOrValue<string>,
+      PromiseOrValue<BigNumberish>[],
+      PromiseOrValue<BigNumberish>[],
+      PromiseOrValue<BytesLike>
+    ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "onERC1155Received",
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<string>,
+      PromiseOrValue<BigNumberish>,
       PromiseOrValue<BigNumberish>,
       PromiseOrValue<BytesLike>
     ]
@@ -168,7 +198,7 @@ export interface ERC721BasicInterface extends utils.Interface {
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "ownerOf",
-    values: [PromiseOrValue<BigNumberish>]
+    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>]
   ): string;
   encodeFunctionData(functionFragment: "price", values?: undefined): string;
   encodeFunctionData(
@@ -180,18 +210,21 @@ export interface ERC721BasicInterface extends utils.Interface {
     values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
-    functionFragment: "safeTransferFrom(address,address,uint256)",
+    functionFragment: "safeBatchTransferFrom",
     values: [
       PromiseOrValue<string>,
       PromiseOrValue<string>,
-      PromiseOrValue<BigNumberish>
+      PromiseOrValue<BigNumberish>[],
+      PromiseOrValue<BigNumberish>[],
+      PromiseOrValue<BytesLike>
     ]
   ): string;
   encodeFunctionData(
-    functionFragment: "safeTransferFrom(address,address,uint256,bytes)",
+    functionFragment: "safeTransferFrom",
     values: [
       PromiseOrValue<string>,
       PromiseOrValue<string>,
+      PromiseOrValue<BigNumberish>,
       PromiseOrValue<BigNumberish>,
       PromiseOrValue<BytesLike>
     ]
@@ -221,23 +254,15 @@ export interface ERC721BasicInterface extends utils.Interface {
     functionFragment: "supportsInterface",
     values: [PromiseOrValue<BytesLike>]
   ): string;
-  encodeFunctionData(functionFragment: "symbol", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "tokenURI",
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
   encodeFunctionData(
     functionFragment: "totalSupply",
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "transferFrom",
-    values: [
-      PromiseOrValue<string>,
-      PromiseOrValue<string>,
-      PromiseOrValue<BigNumberish>
-    ]
+    functionFragment: "uri",
+    values: [PromiseOrValue<BigNumberish>]
   ): string;
+  encodeFunctionData(functionFragment: "uriLock", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "withdraw",
     values: [PromiseOrValue<string>]
@@ -247,34 +272,36 @@ export interface ERC721BasicInterface extends utils.Interface {
     values: [PromiseOrValue<string>, PromiseOrValue<string>]
   ): string;
 
-  decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "baseURILock",
+    functionFragment: "balanceOfBatch",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "baseURI", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "burn", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "burnBatch", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "erc20", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "feeCount", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "getApproved",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "getBaseURI", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "getMintCount",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(
     functionFragment: "isApprovedForAll",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "liveSupply", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "maxSupply", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "mint", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "mintTo", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "mintBatch", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "onERC721Received",
+    functionFragment: "mintBatchTo",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "mintCount", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "mintTo", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "onERC1155BatchReceived",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "onERC1155Received",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
@@ -289,11 +316,11 @@ export interface ERC721BasicInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "safeTransferFrom(address,address,uint256)",
+    functionFragment: "safeBatchTransferFrom",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "safeTransferFrom(address,address,uint256,bytes)",
+    functionFragment: "safeTransferFrom",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -315,16 +342,12 @@ export interface ERC721BasicInterface extends utils.Interface {
     functionFragment: "supportsInterface",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "tokenURI", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "totalSupply",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "transferFrom",
-    data: BytesLike
-  ): Result;
+  decodeFunctionResult(functionFragment: "uri", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "uriLock", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "withdraw", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "withdrawERC20",
@@ -332,7 +355,6 @@ export interface ERC721BasicInterface extends utils.Interface {
   ): Result;
 
   events: {
-    "Approval(address,address,uint256)": EventFragment;
     "ApprovalForAll(address,address,bool)": EventFragment;
     "BaseURILocked(string)": EventFragment;
     "BaseURISet(string)": EventFragment;
@@ -340,10 +362,11 @@ export interface ERC721BasicInterface extends utils.Interface {
     "PublicMintStateSet(bool)": EventFragment;
     "RoyaltyFeeSet(uint256)": EventFragment;
     "RoyaltyRecipientSet(address)": EventFragment;
-    "Transfer(address,address,uint256)": EventFragment;
+    "TransferBatch(address,address,address,uint256[],uint256[])": EventFragment;
+    "TransferSingle(address,address,address,uint256,uint256)": EventFragment;
+    "URI(string,uint256)": EventFragment;
   };
 
-  getEvent(nameOrSignatureOrTopic: "Approval"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "ApprovalForAll"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "BaseURILocked"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "BaseURISet"): EventFragment;
@@ -351,20 +374,10 @@ export interface ERC721BasicInterface extends utils.Interface {
   getEvent(nameOrSignatureOrTopic: "PublicMintStateSet"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoyaltyFeeSet"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoyaltyRecipientSet"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "TransferBatch"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "TransferSingle"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "URI"): EventFragment;
 }
-
-export interface ApprovalEventObject {
-  owner: string;
-  spender: string;
-  id: BigNumber;
-}
-export type ApprovalEvent = TypedEvent<
-  [string, string, BigNumber],
-  ApprovalEventObject
->;
-
-export type ApprovalEventFilter = TypedEventFilter<ApprovalEvent>;
 
 export interface ApprovalForAllEventObject {
   owner: string;
@@ -435,24 +448,48 @@ export type RoyaltyRecipientSetEvent = TypedEvent<
 export type RoyaltyRecipientSetEventFilter =
   TypedEventFilter<RoyaltyRecipientSetEvent>;
 
-export interface TransferEventObject {
+export interface TransferBatchEventObject {
+  operator: string;
+  from: string;
+  to: string;
+  ids: BigNumber[];
+  amounts: BigNumber[];
+}
+export type TransferBatchEvent = TypedEvent<
+  [string, string, string, BigNumber[], BigNumber[]],
+  TransferBatchEventObject
+>;
+
+export type TransferBatchEventFilter = TypedEventFilter<TransferBatchEvent>;
+
+export interface TransferSingleEventObject {
+  operator: string;
   from: string;
   to: string;
   id: BigNumber;
+  amount: BigNumber;
 }
-export type TransferEvent = TypedEvent<
-  [string, string, BigNumber],
-  TransferEventObject
+export type TransferSingleEvent = TypedEvent<
+  [string, string, string, BigNumber, BigNumber],
+  TransferSingleEventObject
 >;
 
-export type TransferEventFilter = TypedEventFilter<TransferEvent>;
+export type TransferSingleEventFilter = TypedEventFilter<TransferSingleEvent>;
 
-export interface ERC721Basic extends BaseContract {
+export interface URIEventObject {
+  value: string;
+  id: BigNumber;
+}
+export type URIEvent = TypedEvent<[string, BigNumber], URIEventObject>;
+
+export type URIEventFilter = TypedEventFilter<URIEvent>;
+
+export interface ERC1155Basic extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  interface: ERC721BasicInterface;
+  interface: ERC1155BasicInterface;
 
   queryFilter<TEvent extends TypedEvent>(
     event: TypedEventFilter<TEvent>,
@@ -474,21 +511,32 @@ export interface ERC721Basic extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
-    approve(
-      spender: PromiseOrValue<string>,
-      id: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
     balanceOf(
       owner: PromiseOrValue<string>,
+      id: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
+    ): Promise<[BigNumber] & { bal: BigNumber }>;
 
-    baseURILock(overrides?: CallOverrides): Promise<[boolean]>;
+    balanceOfBatch(
+      owners: PromiseOrValue<string>[],
+      ids: PromiseOrValue<BigNumberish>[],
+      overrides?: CallOverrides
+    ): Promise<[BigNumber[]] & { balances: BigNumber[] }>;
+
+    baseURI(overrides?: CallOverrides): Promise<[string]>;
 
     burn(
+      from: PromiseOrValue<string>[],
       ids: PromiseOrValue<BigNumberish>[],
+      balances: PromiseOrValue<BigNumberish>[],
+      erc20Owner: PromiseOrValue<string>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    burnBatch(
+      from: PromiseOrValue<string>,
+      ids: PromiseOrValue<BigNumberish>[],
+      amounts: PromiseOrValue<BigNumberish>[],
       erc20Owner: PromiseOrValue<string>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
@@ -497,51 +545,73 @@ export interface ERC721Basic extends BaseContract {
 
     feeCount(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    getApproved(
-      arg0: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<[string]>;
-
-    getBaseURI(overrides?: CallOverrides): Promise<[string]>;
-
-    getMintCount(overrides?: CallOverrides): Promise<[BigNumber]>;
-
     isApprovedForAll(
       arg0: PromiseOrValue<string>,
       arg1: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
+    liveSupply(
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { _val: BigNumber }>;
+
     maxSupply(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     mint(
       amount: PromiseOrValue<BigNumberish>,
+      balance: PromiseOrValue<BigNumberish>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    mintTo(
+    mintBatch(
+      ids: PromiseOrValue<BigNumberish>[],
+      amounts: PromiseOrValue<BigNumberish>[],
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    mintBatchTo(
       to: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
+      ids: PromiseOrValue<BigNumberish>[],
+      amounts: PromiseOrValue<BigNumberish>[],
       erc20Owner: PromiseOrValue<string>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    name(overrides?: CallOverrides): Promise<[string]>;
+    mintCount(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    onERC721Received(
+    mintTo(
+      to: PromiseOrValue<string>,
+      amount: PromiseOrValue<BigNumberish>,
+      balance: PromiseOrValue<BigNumberish>[],
+      erc20Owner: PromiseOrValue<string>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    onERC1155BatchReceived(
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<string>,
+      arg2: PromiseOrValue<BigNumberish>[],
+      arg3: PromiseOrValue<BigNumberish>[],
+      arg4: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    onERC1155Received(
       arg0: PromiseOrValue<string>,
       arg1: PromiseOrValue<string>,
       arg2: PromiseOrValue<BigNumberish>,
-      arg3: PromiseOrValue<BytesLike>,
+      arg3: PromiseOrValue<BigNumberish>,
+      arg4: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
     owner(overrides?: CallOverrides): Promise<[string]>;
 
     ownerOf(
-      id: PromiseOrValue<BigNumberish>,
+      arg0: PromiseOrValue<BigNumberish>,
+      arg1: PromiseOrValue<string>,
       overrides?: CallOverrides
-    ): Promise<[string] & { owner: string }>;
+    ): Promise<[BigNumber]>;
 
     price(overrides?: CallOverrides): Promise<[BigNumber]>;
 
@@ -555,17 +625,20 @@ export interface ERC721Basic extends BaseContract {
       [string, BigNumber] & { receiver: string; royaltyAmount: BigNumber }
     >;
 
-    "safeTransferFrom(address,address,uint256)"(
+    safeBatchTransferFrom(
       from: PromiseOrValue<string>,
       to: PromiseOrValue<string>,
-      id: PromiseOrValue<BigNumberish>,
+      ids: PromiseOrValue<BigNumberish>[],
+      amounts: PromiseOrValue<BigNumberish>[],
+      data: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    "safeTransferFrom(address,address,uint256,bytes)"(
+    safeTransferFrom(
       from: PromiseOrValue<string>,
       to: PromiseOrValue<string>,
       id: PromiseOrValue<BigNumberish>,
+      amount: PromiseOrValue<BigNumberish>,
       data: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
@@ -602,21 +675,14 @@ export interface ERC721Basic extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
-    symbol(overrides?: CallOverrides): Promise<[string]>;
+    totalSupply(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    tokenURI(
+    uri(
       id: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<[string]>;
 
-    totalSupply(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    transferFrom(
-      from: PromiseOrValue<string>,
-      to: PromiseOrValue<string>,
-      id: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+    uriLock(overrides?: CallOverrides): Promise<[boolean]>;
 
     withdraw(
       recipient: PromiseOrValue<string>,
@@ -630,21 +696,32 @@ export interface ERC721Basic extends BaseContract {
     ): Promise<ContractTransaction>;
   };
 
-  approve(
-    spender: PromiseOrValue<string>,
-    id: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
   balanceOf(
     owner: PromiseOrValue<string>,
+    id: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
-  baseURILock(overrides?: CallOverrides): Promise<boolean>;
+  balanceOfBatch(
+    owners: PromiseOrValue<string>[],
+    ids: PromiseOrValue<BigNumberish>[],
+    overrides?: CallOverrides
+  ): Promise<BigNumber[]>;
+
+  baseURI(overrides?: CallOverrides): Promise<string>;
 
   burn(
+    from: PromiseOrValue<string>[],
     ids: PromiseOrValue<BigNumberish>[],
+    balances: PromiseOrValue<BigNumberish>[],
+    erc20Owner: PromiseOrValue<string>,
+    overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  burnBatch(
+    from: PromiseOrValue<string>,
+    ids: PromiseOrValue<BigNumberish>[],
+    amounts: PromiseOrValue<BigNumberish>[],
     erc20Owner: PromiseOrValue<string>,
     overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
@@ -653,51 +730,71 @@ export interface ERC721Basic extends BaseContract {
 
   feeCount(overrides?: CallOverrides): Promise<BigNumber>;
 
-  getApproved(
-    arg0: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides
-  ): Promise<string>;
-
-  getBaseURI(overrides?: CallOverrides): Promise<string>;
-
-  getMintCount(overrides?: CallOverrides): Promise<BigNumber>;
-
   isApprovedForAll(
     arg0: PromiseOrValue<string>,
     arg1: PromiseOrValue<string>,
     overrides?: CallOverrides
   ): Promise<boolean>;
 
+  liveSupply(overrides?: CallOverrides): Promise<BigNumber>;
+
   maxSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
   mint(
     amount: PromiseOrValue<BigNumberish>,
+    balance: PromiseOrValue<BigNumberish>,
     overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  mintTo(
+  mintBatch(
+    ids: PromiseOrValue<BigNumberish>[],
+    amounts: PromiseOrValue<BigNumberish>[],
+    overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  mintBatchTo(
     to: PromiseOrValue<string>,
-    amount: PromiseOrValue<BigNumberish>,
+    ids: PromiseOrValue<BigNumberish>[],
+    amounts: PromiseOrValue<BigNumberish>[],
     erc20Owner: PromiseOrValue<string>,
     overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  name(overrides?: CallOverrides): Promise<string>;
+  mintCount(overrides?: CallOverrides): Promise<BigNumber>;
 
-  onERC721Received(
+  mintTo(
+    to: PromiseOrValue<string>,
+    amount: PromiseOrValue<BigNumberish>,
+    balance: PromiseOrValue<BigNumberish>[],
+    erc20Owner: PromiseOrValue<string>,
+    overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  onERC1155BatchReceived(
+    arg0: PromiseOrValue<string>,
+    arg1: PromiseOrValue<string>,
+    arg2: PromiseOrValue<BigNumberish>[],
+    arg3: PromiseOrValue<BigNumberish>[],
+    arg4: PromiseOrValue<BytesLike>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  onERC1155Received(
     arg0: PromiseOrValue<string>,
     arg1: PromiseOrValue<string>,
     arg2: PromiseOrValue<BigNumberish>,
-    arg3: PromiseOrValue<BytesLike>,
+    arg3: PromiseOrValue<BigNumberish>,
+    arg4: PromiseOrValue<BytesLike>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
   owner(overrides?: CallOverrides): Promise<string>;
 
   ownerOf(
-    id: PromiseOrValue<BigNumberish>,
+    arg0: PromiseOrValue<BigNumberish>,
+    arg1: PromiseOrValue<string>,
     overrides?: CallOverrides
-  ): Promise<string>;
+  ): Promise<BigNumber>;
 
   price(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -711,17 +808,20 @@ export interface ERC721Basic extends BaseContract {
     [string, BigNumber] & { receiver: string; royaltyAmount: BigNumber }
   >;
 
-  "safeTransferFrom(address,address,uint256)"(
+  safeBatchTransferFrom(
     from: PromiseOrValue<string>,
     to: PromiseOrValue<string>,
-    id: PromiseOrValue<BigNumberish>,
+    ids: PromiseOrValue<BigNumberish>[],
+    amounts: PromiseOrValue<BigNumberish>[],
+    data: PromiseOrValue<BytesLike>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  "safeTransferFrom(address,address,uint256,bytes)"(
+  safeTransferFrom(
     from: PromiseOrValue<string>,
     to: PromiseOrValue<string>,
     id: PromiseOrValue<BigNumberish>,
+    amount: PromiseOrValue<BigNumberish>,
     data: PromiseOrValue<BytesLike>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
@@ -758,21 +858,14 @@ export interface ERC721Basic extends BaseContract {
     overrides?: CallOverrides
   ): Promise<boolean>;
 
-  symbol(overrides?: CallOverrides): Promise<string>;
+  totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
-  tokenURI(
+  uri(
     id: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
   ): Promise<string>;
 
-  totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
-
-  transferFrom(
-    from: PromiseOrValue<string>,
-    to: PromiseOrValue<string>,
-    id: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+  uriLock(overrides?: CallOverrides): Promise<boolean>;
 
   withdraw(
     recipient: PromiseOrValue<string>,
@@ -786,21 +879,32 @@ export interface ERC721Basic extends BaseContract {
   ): Promise<ContractTransaction>;
 
   callStatic: {
-    approve(
-      spender: PromiseOrValue<string>,
-      id: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
     balanceOf(
       owner: PromiseOrValue<string>,
+      id: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    baseURILock(overrides?: CallOverrides): Promise<boolean>;
+    balanceOfBatch(
+      owners: PromiseOrValue<string>[],
+      ids: PromiseOrValue<BigNumberish>[],
+      overrides?: CallOverrides
+    ): Promise<BigNumber[]>;
+
+    baseURI(overrides?: CallOverrides): Promise<string>;
 
     burn(
+      from: PromiseOrValue<string>[],
       ids: PromiseOrValue<BigNumberish>[],
+      balances: PromiseOrValue<BigNumberish>[],
+      erc20Owner: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    burnBatch(
+      from: PromiseOrValue<string>,
+      ids: PromiseOrValue<BigNumberish>[],
+      amounts: PromiseOrValue<BigNumberish>[],
       erc20Owner: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
@@ -809,51 +913,71 @@ export interface ERC721Basic extends BaseContract {
 
     feeCount(overrides?: CallOverrides): Promise<BigNumber>;
 
-    getApproved(
-      arg0: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<string>;
-
-    getBaseURI(overrides?: CallOverrides): Promise<string>;
-
-    getMintCount(overrides?: CallOverrides): Promise<BigNumber>;
-
     isApprovedForAll(
       arg0: PromiseOrValue<string>,
       arg1: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<boolean>;
 
+    liveSupply(overrides?: CallOverrides): Promise<BigNumber>;
+
     maxSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
     mint(
       amount: PromiseOrValue<BigNumberish>,
+      balance: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    mintTo(
+    mintBatch(
+      ids: PromiseOrValue<BigNumberish>[],
+      amounts: PromiseOrValue<BigNumberish>[],
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    mintBatchTo(
       to: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
+      ids: PromiseOrValue<BigNumberish>[],
+      amounts: PromiseOrValue<BigNumberish>[],
       erc20Owner: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    name(overrides?: CallOverrides): Promise<string>;
+    mintCount(overrides?: CallOverrides): Promise<BigNumber>;
 
-    onERC721Received(
+    mintTo(
+      to: PromiseOrValue<string>,
+      amount: PromiseOrValue<BigNumberish>,
+      balance: PromiseOrValue<BigNumberish>[],
+      erc20Owner: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    onERC1155BatchReceived(
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<string>,
+      arg2: PromiseOrValue<BigNumberish>[],
+      arg3: PromiseOrValue<BigNumberish>[],
+      arg4: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
+    onERC1155Received(
       arg0: PromiseOrValue<string>,
       arg1: PromiseOrValue<string>,
       arg2: PromiseOrValue<BigNumberish>,
-      arg3: PromiseOrValue<BytesLike>,
+      arg3: PromiseOrValue<BigNumberish>,
+      arg4: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<string>;
 
     owner(overrides?: CallOverrides): Promise<string>;
 
     ownerOf(
-      id: PromiseOrValue<BigNumberish>,
+      arg0: PromiseOrValue<BigNumberish>,
+      arg1: PromiseOrValue<string>,
       overrides?: CallOverrides
-    ): Promise<string>;
+    ): Promise<BigNumber>;
 
     price(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -867,17 +991,20 @@ export interface ERC721Basic extends BaseContract {
       [string, BigNumber] & { receiver: string; royaltyAmount: BigNumber }
     >;
 
-    "safeTransferFrom(address,address,uint256)"(
+    safeBatchTransferFrom(
       from: PromiseOrValue<string>,
       to: PromiseOrValue<string>,
-      id: PromiseOrValue<BigNumberish>,
+      ids: PromiseOrValue<BigNumberish>[],
+      amounts: PromiseOrValue<BigNumberish>[],
+      data: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    "safeTransferFrom(address,address,uint256,bytes)"(
+    safeTransferFrom(
       from: PromiseOrValue<string>,
       to: PromiseOrValue<string>,
       id: PromiseOrValue<BigNumberish>,
+      amount: PromiseOrValue<BigNumberish>,
       data: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<void>;
@@ -912,21 +1039,14 @@ export interface ERC721Basic extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    symbol(overrides?: CallOverrides): Promise<string>;
+    totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
-    tokenURI(
+    uri(
       id: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<string>;
 
-    totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
-
-    transferFrom(
-      from: PromiseOrValue<string>,
-      to: PromiseOrValue<string>,
-      id: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    uriLock(overrides?: CallOverrides): Promise<boolean>;
 
     withdraw(
       recipient: PromiseOrValue<string>,
@@ -941,17 +1061,6 @@ export interface ERC721Basic extends BaseContract {
   };
 
   filters: {
-    "Approval(address,address,uint256)"(
-      owner?: PromiseOrValue<string> | null,
-      spender?: PromiseOrValue<string> | null,
-      id?: PromiseOrValue<BigNumberish> | null
-    ): ApprovalEventFilter;
-    Approval(
-      owner?: PromiseOrValue<string> | null,
-      spender?: PromiseOrValue<string> | null,
-      id?: PromiseOrValue<BigNumberish> | null
-    ): ApprovalEventFilter;
-
     "ApprovalForAll(address,address,bool)"(
       owner?: PromiseOrValue<string> | null,
       operator?: PromiseOrValue<string> | null,
@@ -1007,34 +1116,70 @@ export interface ERC721Basic extends BaseContract {
       newRecipient?: PromiseOrValue<string> | null
     ): RoyaltyRecipientSetEventFilter;
 
-    "Transfer(address,address,uint256)"(
+    "TransferBatch(address,address,address,uint256[],uint256[])"(
+      operator?: PromiseOrValue<string> | null,
       from?: PromiseOrValue<string> | null,
       to?: PromiseOrValue<string> | null,
-      id?: PromiseOrValue<BigNumberish> | null
-    ): TransferEventFilter;
-    Transfer(
+      ids?: null,
+      amounts?: null
+    ): TransferBatchEventFilter;
+    TransferBatch(
+      operator?: PromiseOrValue<string> | null,
       from?: PromiseOrValue<string> | null,
       to?: PromiseOrValue<string> | null,
+      ids?: null,
+      amounts?: null
+    ): TransferBatchEventFilter;
+
+    "TransferSingle(address,address,address,uint256,uint256)"(
+      operator?: PromiseOrValue<string> | null,
+      from?: PromiseOrValue<string> | null,
+      to?: PromiseOrValue<string> | null,
+      id?: null,
+      amount?: null
+    ): TransferSingleEventFilter;
+    TransferSingle(
+      operator?: PromiseOrValue<string> | null,
+      from?: PromiseOrValue<string> | null,
+      to?: PromiseOrValue<string> | null,
+      id?: null,
+      amount?: null
+    ): TransferSingleEventFilter;
+
+    "URI(string,uint256)"(
+      value?: null,
       id?: PromiseOrValue<BigNumberish> | null
-    ): TransferEventFilter;
+    ): URIEventFilter;
+    URI(value?: null, id?: PromiseOrValue<BigNumberish> | null): URIEventFilter;
   };
 
   estimateGas: {
-    approve(
-      spender: PromiseOrValue<string>,
-      id: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
     balanceOf(
       owner: PromiseOrValue<string>,
+      id: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    baseURILock(overrides?: CallOverrides): Promise<BigNumber>;
+    balanceOfBatch(
+      owners: PromiseOrValue<string>[],
+      ids: PromiseOrValue<BigNumberish>[],
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    baseURI(overrides?: CallOverrides): Promise<BigNumber>;
 
     burn(
+      from: PromiseOrValue<string>[],
       ids: PromiseOrValue<BigNumberish>[],
+      balances: PromiseOrValue<BigNumberish>[],
+      erc20Owner: PromiseOrValue<string>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    burnBatch(
+      from: PromiseOrValue<string>,
+      ids: PromiseOrValue<BigNumberish>[],
+      amounts: PromiseOrValue<BigNumberish>[],
       erc20Owner: PromiseOrValue<string>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
@@ -1043,49 +1188,69 @@ export interface ERC721Basic extends BaseContract {
 
     feeCount(overrides?: CallOverrides): Promise<BigNumber>;
 
-    getApproved(
-      arg0: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    getBaseURI(overrides?: CallOverrides): Promise<BigNumber>;
-
-    getMintCount(overrides?: CallOverrides): Promise<BigNumber>;
-
     isApprovedForAll(
       arg0: PromiseOrValue<string>,
       arg1: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    liveSupply(overrides?: CallOverrides): Promise<BigNumber>;
+
     maxSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
     mint(
       amount: PromiseOrValue<BigNumberish>,
+      balance: PromiseOrValue<BigNumberish>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    mintTo(
+    mintBatch(
+      ids: PromiseOrValue<BigNumberish>[],
+      amounts: PromiseOrValue<BigNumberish>[],
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    mintBatchTo(
       to: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
+      ids: PromiseOrValue<BigNumberish>[],
+      amounts: PromiseOrValue<BigNumberish>[],
       erc20Owner: PromiseOrValue<string>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    name(overrides?: CallOverrides): Promise<BigNumber>;
+    mintCount(overrides?: CallOverrides): Promise<BigNumber>;
 
-    onERC721Received(
+    mintTo(
+      to: PromiseOrValue<string>,
+      amount: PromiseOrValue<BigNumberish>,
+      balance: PromiseOrValue<BigNumberish>[],
+      erc20Owner: PromiseOrValue<string>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    onERC1155BatchReceived(
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<string>,
+      arg2: PromiseOrValue<BigNumberish>[],
+      arg3: PromiseOrValue<BigNumberish>[],
+      arg4: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    onERC1155Received(
       arg0: PromiseOrValue<string>,
       arg1: PromiseOrValue<string>,
       arg2: PromiseOrValue<BigNumberish>,
-      arg3: PromiseOrValue<BytesLike>,
+      arg3: PromiseOrValue<BigNumberish>,
+      arg4: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
     ownerOf(
-      id: PromiseOrValue<BigNumberish>,
+      arg0: PromiseOrValue<BigNumberish>,
+      arg1: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -1099,17 +1264,20 @@ export interface ERC721Basic extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    "safeTransferFrom(address,address,uint256)"(
+    safeBatchTransferFrom(
       from: PromiseOrValue<string>,
       to: PromiseOrValue<string>,
-      id: PromiseOrValue<BigNumberish>,
+      ids: PromiseOrValue<BigNumberish>[],
+      amounts: PromiseOrValue<BigNumberish>[],
+      data: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    "safeTransferFrom(address,address,uint256,bytes)"(
+    safeTransferFrom(
       from: PromiseOrValue<string>,
       to: PromiseOrValue<string>,
       id: PromiseOrValue<BigNumberish>,
+      amount: PromiseOrValue<BigNumberish>,
       data: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
@@ -1146,21 +1314,14 @@ export interface ERC721Basic extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    symbol(overrides?: CallOverrides): Promise<BigNumber>;
+    totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
-    tokenURI(
+    uri(
       id: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
-
-    transferFrom(
-      from: PromiseOrValue<string>,
-      to: PromiseOrValue<string>,
-      id: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
+    uriLock(overrides?: CallOverrides): Promise<BigNumber>;
 
     withdraw(
       recipient: PromiseOrValue<string>,
@@ -1175,21 +1336,32 @@ export interface ERC721Basic extends BaseContract {
   };
 
   populateTransaction: {
-    approve(
-      spender: PromiseOrValue<string>,
-      id: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
     balanceOf(
       owner: PromiseOrValue<string>,
+      id: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    baseURILock(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    balanceOfBatch(
+      owners: PromiseOrValue<string>[],
+      ids: PromiseOrValue<BigNumberish>[],
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    baseURI(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     burn(
+      from: PromiseOrValue<string>[],
       ids: PromiseOrValue<BigNumberish>[],
+      balances: PromiseOrValue<BigNumberish>[],
+      erc20Owner: PromiseOrValue<string>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    burnBatch(
+      from: PromiseOrValue<string>,
+      ids: PromiseOrValue<BigNumberish>[],
+      amounts: PromiseOrValue<BigNumberish>[],
       erc20Owner: PromiseOrValue<string>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
@@ -1198,49 +1370,69 @@ export interface ERC721Basic extends BaseContract {
 
     feeCount(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    getApproved(
-      arg0: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    getBaseURI(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    getMintCount(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     isApprovedForAll(
       arg0: PromiseOrValue<string>,
       arg1: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    liveSupply(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     maxSupply(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     mint(
       amount: PromiseOrValue<BigNumberish>,
+      balance: PromiseOrValue<BigNumberish>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    mintTo(
+    mintBatch(
+      ids: PromiseOrValue<BigNumberish>[],
+      amounts: PromiseOrValue<BigNumberish>[],
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    mintBatchTo(
       to: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
+      ids: PromiseOrValue<BigNumberish>[],
+      amounts: PromiseOrValue<BigNumberish>[],
       erc20Owner: PromiseOrValue<string>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    mintCount(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    onERC721Received(
+    mintTo(
+      to: PromiseOrValue<string>,
+      amount: PromiseOrValue<BigNumberish>,
+      balance: PromiseOrValue<BigNumberish>[],
+      erc20Owner: PromiseOrValue<string>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    onERC1155BatchReceived(
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<string>,
+      arg2: PromiseOrValue<BigNumberish>[],
+      arg3: PromiseOrValue<BigNumberish>[],
+      arg4: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    onERC1155Received(
       arg0: PromiseOrValue<string>,
       arg1: PromiseOrValue<string>,
       arg2: PromiseOrValue<BigNumberish>,
-      arg3: PromiseOrValue<BytesLike>,
+      arg3: PromiseOrValue<BigNumberish>,
+      arg4: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     ownerOf(
-      id: PromiseOrValue<BigNumberish>,
+      arg0: PromiseOrValue<BigNumberish>,
+      arg1: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -1254,17 +1446,20 @@ export interface ERC721Basic extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    "safeTransferFrom(address,address,uint256)"(
+    safeBatchTransferFrom(
       from: PromiseOrValue<string>,
       to: PromiseOrValue<string>,
-      id: PromiseOrValue<BigNumberish>,
+      ids: PromiseOrValue<BigNumberish>[],
+      amounts: PromiseOrValue<BigNumberish>[],
+      data: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    "safeTransferFrom(address,address,uint256,bytes)"(
+    safeTransferFrom(
       from: PromiseOrValue<string>,
       to: PromiseOrValue<string>,
       id: PromiseOrValue<BigNumberish>,
+      amount: PromiseOrValue<BigNumberish>,
       data: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
@@ -1301,21 +1496,14 @@ export interface ERC721Basic extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    symbol(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    totalSupply(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    tokenURI(
+    uri(
       id: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    totalSupply(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    transferFrom(
-      from: PromiseOrValue<string>,
-      to: PromiseOrValue<string>,
-      id: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
+    uriLock(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     withdraw(
       recipient: PromiseOrValue<string>,

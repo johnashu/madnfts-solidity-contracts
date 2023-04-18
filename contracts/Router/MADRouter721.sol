@@ -4,7 +4,7 @@ pragma solidity 0.8.19;
 
 import { MADRouterBase, ERC20, FactoryVerifier } from "contracts/Router/MADRouterBase.sol";
 
-import { ERC721Basic } from "contracts/lib/tokens/ERC721/Impl/ERC721Basic.sol";
+import { ERC721Basic } from "contracts/MADTokens/ERC721/ERC721Basic.sol";
 
 contract MADRouter721 is MADRouterBase {
     ////////////////////////////////////////////////////////////////
@@ -37,7 +37,7 @@ contract MADRouter721 is MADRouterBase {
 
         _tokenType == 1 ? ERC721Basic(_token).setBaseURI(_baseURI) : revert("INVALID_TYPE");
 
-        emit BaseURI(_colID, _baseURI);
+        emit BaseURISet(_colID, _baseURI);
     }
 
     /// @notice Collection baseURI locker preventing URI updates when set.

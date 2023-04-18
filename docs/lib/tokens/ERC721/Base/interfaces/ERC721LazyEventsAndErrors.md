@@ -80,10 +80,10 @@ error NotMintedYet()
 
 _0xbad086ea_
 
-### UriLocked
+### BaseURILocked
 
 ```solidity
-error UriLocked()
+error BaseURILocked()
 ```
 
 _?_

@@ -4,7 +4,7 @@ pragma solidity 0.8.19;
 
 import { SplitterImpl } from "contracts/Shared/Types.sol";
 import { ERC20 } from "contracts/lib/tokens/ERC20.sol";
-import { ERC721Basic } from "contracts/lib/tokens/ERC721/Impl/ERC721Basic.sol";
+import { ERC721Basic } from "contracts/MADTokens/ERC721/ERC721Basic.sol";
 import { CREATE3 } from "contracts/lib/utils/CREATE3.sol";
 
 library ERC721BasicDeployer {

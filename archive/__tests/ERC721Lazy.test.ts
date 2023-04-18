@@ -436,7 +436,7 @@
 //       const approved3 = await lazy.callStatic.getApproved(20);
 //       const approved4 = await lazy.callStatic.getApproved(30);
 //       const mintCounter =
-//         await lazy.callStatic.getMintCount();
+//         await lazy.callStatic.mintCount();
 
 //       expect(tx).to.be.ok;
 //       expect(bal1).to.eq(19);
@@ -476,11 +476,11 @@
 //         sigSplit.s,
 //         { value: price.mul(amount) },
 //       );
-//       const base = await lazy.callStatic.getBaseURI();
+//       const base = await lazy.callStatic.baseURI();
 //       const sup = await lazy.callStatic.totalSupply();
 //       await lazy.burn([1, 2], owner.address);
 //       await lazy.setBaseURI(res);
-//       const base2 = await lazy.callStatic.getBaseURI();
+//       const base2 = await lazy.callStatic.baseURI();
 
 //       const sup2 = await lazy.callStatic.totalSupply();
 //       expect(base).to.be.ok;
@@ -520,7 +520,7 @@
 //     });
 
 //     it("Should query mint count", async () => {
-//       const tx = await lazy.callStatic.getMintCount();
+//       const tx = await lazy.callStatic.mintCount();
 //       expect(tx).to.be.ok;
 //       expect(tx).to.eq(0);
 //     });

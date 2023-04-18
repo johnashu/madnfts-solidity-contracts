@@ -83,8 +83,6 @@ describe("Splitter", () => {
       // can't be eq to ethAmount due to contract deployment cost
       res = await ethers.provider.getBalance(owner.address);
       expect(res.toString()).to.have.lengthOf(22);
-      // console.log(res); // lengthOf = 22
-      // console.log(ethAmount); // lengthOf = 23
 
       // those should eq to hardhat prefunded account's value
       expect(

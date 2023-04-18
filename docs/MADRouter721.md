@@ -440,7 +440,7 @@ _Leave `_token` param empty for withdrawing eth only. No withdraw min needs to b
 
 ## Events
 
-### BaseURI
+### baseURI
 
 ```solidity
 event BaseURI(bytes32 indexed _id, string indexed _baseURI)

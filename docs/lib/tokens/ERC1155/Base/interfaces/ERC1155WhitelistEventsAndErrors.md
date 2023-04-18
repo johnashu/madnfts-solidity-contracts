@@ -188,10 +188,10 @@ error PublicMintClosed()
 
 _0x2d0a3f8e_
 
-### UriLocked
+### BaseURILocked
 
 ```solidity
-error UriLocked()
+error BaseURILocked()
 ```
 
 _?_

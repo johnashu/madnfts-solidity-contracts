@@ -106,10 +106,10 @@ function getApproved(uint256) external view returns (address)
 | ---- | ------- | ----------- |
 | \_0  | address | undefined   |
 
-### getBaseURI
+### baseURI
 
 ```solidity
-function getBaseURI() external view returns (string)
+function baseURI() external view returns (string)
 ```
 
 #### Returns
@@ -118,10 +118,10 @@ function getBaseURI() external view returns (string)
 | ---- | ------ | ----------- |
 | \_0  | string | undefined   |
 
-### getMintCount
+### mintCount
 
 ```solidity
-function getMintCount() external view returns (uint256)
+function mintCount() external view returns (uint256)
 ```
 
 #### Returns
@@ -648,10 +648,10 @@ error PublicMintClosed()
 
 _0x2d0a3f8e_
 
-### UriLocked
+### BaseURILocked
 
 ```solidity
-error UriLocked()
+error BaseURILocked()
 ```
 
 _?_

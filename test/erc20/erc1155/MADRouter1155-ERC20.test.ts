@@ -71,9 +71,7 @@ describe("MADRouter1155 - ERC20", () => {
 
       // check each global var
       expect(await r1155.callStatic.name()).to.eq("router");
-      expect(await r1155.madFactory()).to.eq(
-        f1155.address,
-      );
+      expect(await r1155.madFactory()).to.eq(f1155.address);
       expect(await r1155.callStatic.erc20()).to.eq(
         erc20.address,
       );
@@ -120,13 +118,13 @@ describe("MADRouter1155 - ERC20", () => {
       );
       const tx = await r1155
         .connect(acc02)
-        .setURI(basicAddr, "null");
+        .setBaseURI(basicAddr, "null");
 
       expect(tx).to.be.ok;
       await expect(tx)
-        .to.emit(r1155, "BaseURI")
+        .to.emit(r1155, "BaseURISet")
         .withArgs(colID, "null");
-      expect(await basic.callStatic.getURI()).to.eq("null");
+      expect(await basic.callStatic.baseURI()).to.eq("null");
       const verArt = await artifacts.readArtifact(
         "FactoryVerifier",
       );
@@ -136,7 +134,7 @@ describe("MADRouter1155 - ERC20", () => {
         ethers.provider,
       );
       await expect(
-        r1155.connect(acc01).setURI(basicAddr, "void"),
+        r1155.connect(acc01).setBaseURI(basicAddr, "void"),
       ).to.be.revertedWithCustomError(
         ver,
         RouterErrors.AccessDenied,
@@ -478,9 +476,9 @@ describe("MADRouter1155 - ERC20", () => {
       await expect(
         r1155.connect(acc01).pause(),
       ).to.be.revertedWith(RouterErrors.Unauthorized);
-      await expect(r1155.setURI(addr, "")).to.be.revertedWith(
-        RouterErrors.Paused,
-      );
+      await expect(
+        r1155.setBaseURI(addr, ""),
+      ).to.be.revertedWith(RouterErrors.Paused);
 
       await expect(
         r1155.burn(

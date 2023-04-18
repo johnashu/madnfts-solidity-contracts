@@ -4,7 +4,7 @@ pragma solidity 0.8.19;
 
 import { MADRouterBase, ERC20, FactoryVerifier } from "contracts/Router/MADRouterBase.sol";
 
-import { ERC1155Basic } from "contracts/lib/tokens/ERC1155/Impl/ERC1155Basic.sol";
+import { ERC1155Basic } from "contracts/MADTokens/ERC1155/ERC1155Basic.sol";
 
 contract MADRouter1155 is MADRouterBase {
     ////////////////////////////////////////////////////////////////
@@ -32,13 +32,13 @@ contract MADRouter1155 is MADRouterBase {
     ///      Function Sighash := 0x4328bd00
     /// @param _token 1155 token address.
     /// @param _uri New URI string.
-    function setURI(address _token, string memory _uri) external nonReentrant whenNotPaused {
+    function setBaseURI(address _token, string memory _uri) external nonReentrant whenNotPaused {
         (bytes32 _colID, uint8 _tokenType) = _tokenRender(_token);
 
         // if (_tokenType == 1) {
-        _tokenType == 1 ? ERC1155Basic(_token).setURI(_uri) : revert("INVALID_TYPE");
+        _tokenType == 1 ? ERC1155Basic(_token).setBaseURI(_uri) : revert("INVALID_TYPE");
 
-        emit BaseURI(_colID, _uri);
+        emit BaseURISet(_colID, _uri);
     }
 
     /// @notice Collection baseURI locker preventing URI updates when set.
@@ -47,10 +47,10 @@ contract MADRouter1155 is MADRouterBase {
     ///      by each tokens' setBaseURILock functions.
     ///      Function Sighash := ?
     /// @param _token 721 token address.
-    function setURILock(address _token) external nonReentrant whenNotPaused {
+    function setURILock(address _token) public whenNotPaused {
         (, uint8 _tokenType) = _tokenRender(_token);
 
-        _tokenType == 1 ? ERC1155Basic(_token).setURILock() : revert("INVALID_TYPE");
+        _tokenType == 1 ? ERC1155Basic(_token).setBaseURILock() : revert("INVALID_TYPE");
     }
 
     /// @notice Global MintState setter/controller

@@ -135,7 +135,7 @@ export interface MADRouterBaseInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "unpause", data: BytesLike): Result;
 
   events: {
-    "BaseURI(bytes32,string)": EventFragment;
+    "BaseURISet(bytes32,string)": EventFragment;
     "FactoryUpdated(address)": EventFragment;
     "FeesUpdated(uint256,uint256)": EventFragment;
     "FreeClaimState(bytes32,uint8,bool)": EventFragment;
@@ -149,7 +149,7 @@ export interface MADRouterBaseInterface extends utils.Interface {
     "WhitelistMintState(bytes32,uint8,bool)": EventFragment;
   };
 
-  getEvent(nameOrSignatureOrTopic: "BaseURI"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "BaseURISet"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "FactoryUpdated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "FeesUpdated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "FreeClaimState"): EventFragment;
@@ -163,13 +163,16 @@ export interface MADRouterBaseInterface extends utils.Interface {
   getEvent(nameOrSignatureOrTopic: "WhitelistMintState"): EventFragment;
 }
 
-export interface BaseURIEventObject {
+export interface BaseURISetEventObject {
   _id: string;
   _baseURI: string;
 }
-export type BaseURIEvent = TypedEvent<[string, string], BaseURIEventObject>;
+export type BaseURISetEvent = TypedEvent<
+  [string, string],
+  BaseURISetEventObject
+>;
 
-export type BaseURIEventFilter = TypedEventFilter<BaseURIEvent>;
+export type BaseURISetEventFilter = TypedEventFilter<BaseURISetEvent>;
 
 export interface FactoryUpdatedEventObject {
   newFactory: string;
@@ -478,14 +481,14 @@ export interface MADRouterBase extends BaseContract {
   };
 
   filters: {
-    "BaseURI(bytes32,string)"(
+    "BaseURISet(bytes32,string)"(
       _id?: PromiseOrValue<BytesLike> | null,
       _baseURI?: PromiseOrValue<string> | null
-    ): BaseURIEventFilter;
-    BaseURI(
+    ): BaseURISetEventFilter;
+    BaseURISet(
       _id?: PromiseOrValue<BytesLike> | null,
       _baseURI?: PromiseOrValue<string> | null
-    ): BaseURIEventFilter;
+    ): BaseURISetEventFilter;
 
     "FactoryUpdated(address)"(
       newFactory?: PromiseOrValue<string> | null

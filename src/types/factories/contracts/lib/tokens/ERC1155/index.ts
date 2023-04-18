@@ -2,4 +2,3 @@
 /* tslint:disable */
 /* eslint-disable */
 export * as base from "./Base";
-export * as impl from "./Impl";

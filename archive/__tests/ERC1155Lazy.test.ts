@@ -581,7 +581,7 @@
 
 //       const dead = ethers.constants.AddressZero;
 //       const mintCounter =
-//         await lazy.callStatic.getMintCount();
+//         await lazy.callStatic.mintCount();
 //       const bal1 = await lazy.callStatic.balanceOf(
 //         owner.address,
 //         1,
@@ -845,7 +845,7 @@
 //     });
 
 //     it("Should query mint count", async () => {
-//       const tx = await lazy.callStatic.getMintCount();
+//       const tx = await lazy.callStatic.mintCount();
 //       expect(tx).to.be.ok;
 //       expect(tx).to.eq(0);
 //     });

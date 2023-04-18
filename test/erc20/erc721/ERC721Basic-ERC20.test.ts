@@ -120,8 +120,6 @@ describe("ERC721Basic - ERC20", () => {
       // can't be eq to ethAmount due to contract deployment cost
       res = await ethers.provider.getBalance(owner.address);
       expect(res.toString()).to.have.lengthOf(22);
-      // console.log(res); // lengthOf = 22
-      // console.log(ethAmount); // lengthOf = 23
 
       // those should eq to hardhat prefunded account's value
       expect(
@@ -145,7 +143,7 @@ describe("ERC721Basic - ERC20", () => {
       const set = await basic
         .connect(owner)
         .setBaseURI(change);
-      const check = await basic.callStatic.getBaseURI();
+      const check = await basic.callStatic.baseURI();
       const setFail = basic.connect(acc01).setBaseURI("fail");
 
       expect(set).to.be.ok;
@@ -354,8 +352,7 @@ describe("ERC721Basic - ERC20", () => {
       const approved2 = await basic.callStatic.getApproved(2);
       const approved3 = await basic.callStatic.getApproved(3);
       const approved4 = await basic.callStatic.getApproved(4);
-      const mintCounter =
-        await basic.callStatic.getMintCount();
+      const mintCounter = await basic.callStatic.mintCount();
 
       expect(tx).to.be.ok;
       expect(bal1).to.eq(2);
@@ -511,14 +508,14 @@ describe("ERC721Basic - ERC20", () => {
     });
 
     it("Should query mint count", async () => {
-      const tx = await basic.callStatic.getMintCount();
+      const tx = await basic.callStatic.mintCount();
       expect(tx).to.be.ok;
       expect(tx).to.eq(0);
     });
 
     it("Should query base uri", async () => {
       const base = "ipfs://cid/";
-      const tx = await basic.callStatic.getBaseURI();
+      const tx = await basic.callStatic.baseURI();
 
       expect(tx).to.be.ok;
       expect(tx).to.eq(base);

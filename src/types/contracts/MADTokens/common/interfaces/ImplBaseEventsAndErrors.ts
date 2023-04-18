@@ -9,7 +9,7 @@ import type {
   TypedListener,
   OnEvent,
   PromiseOrValue,
-} from "../../../../../../../common";
+} from "../../../../common";
 import type { EventFragment } from "@ethersproject/abi";
 import type { Listener, Provider } from "@ethersproject/providers";
 import type {
@@ -20,7 +20,7 @@ import type {
   utils,
 } from "ethers";
 
-export interface ERC721BasicEventsAndErrorsInterface extends utils.Interface {
+export interface ImplBaseEventsAndErrorsInterface extends utils.Interface {
   functions: {};
 
   events: {
@@ -84,12 +84,12 @@ export type RoyaltyRecipientSetEvent = TypedEvent<
 export type RoyaltyRecipientSetEventFilter =
   TypedEventFilter<RoyaltyRecipientSetEvent>;
 
-export interface ERC721BasicEventsAndErrors extends BaseContract {
+export interface ImplBaseEventsAndErrors extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  interface: ERC721BasicEventsAndErrorsInterface;
+  interface: ImplBaseEventsAndErrorsInterface;
 
   queryFilter<TEvent extends TypedEvent>(
     event: TypedEventFilter<TEvent>,

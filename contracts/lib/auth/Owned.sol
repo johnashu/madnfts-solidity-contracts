@@ -24,11 +24,16 @@ abstract contract Owned {
         _;
     }
 
+    modifier notZeroAddress(address _owner) {
+        require(_owner != address(0), "Invalid owner");
+        _;
+    }
+
     /*//////////////////////////////////////////////////////////////
                                CONSTRUCTOR
     //////////////////////////////////////////////////////////////*/
 
-    constructor(address _owner) {
+    constructor(address _owner) notZeroAddress(_owner) {
         owner = _owner;
 
         emit OwnerUpdated(address(0), _owner);
@@ -38,8 +43,7 @@ abstract contract Owned {
                              OWNERSHIP LOGIC
     //////////////////////////////////////////////////////////////*/
 
-    function setOwner(address newOwner) public onlyOwner {
-        require(newOwner != address(0), "Invalid owner");
+    function setOwner(address newOwner) public onlyOwner notZeroAddress(newOwner) {
         assembly {
             sstore(owner.slot, newOwner)
         }

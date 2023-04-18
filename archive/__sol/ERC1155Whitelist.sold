@@ -828,7 +828,7 @@ contract ERC1155Whitelist is
         return liveSupply.current();
     }
 
-    function getMintCount() public view returns (uint256) {
+    function mintCount() public view returns (uint256) {
         return mintCount;
     }
 

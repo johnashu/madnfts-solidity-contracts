@@ -62,9 +62,7 @@ describe("MADRouter1155", () => {
 
       // check each global var
       expect(await r1155.callStatic.name()).to.eq("router");
-      expect(await r1155.madFactory()).to.eq(
-        f1155.address,
-      );
+      expect(await r1155.madFactory()).to.eq(f1155.address);
     });
   });
   describe("Set URI", async () => {
@@ -104,17 +102,19 @@ describe("MADRouter1155", () => {
       );
       const tx1 = r1155
         .connect(acc02)
-        .setURI(basic.address, "null");
+        .setBaseURI(basic.address, "null");
       const tx2 = r1155
         .connect(acc02)
         .setURILock(basic.address);
       expect(await tx1).to.be.ok;
       expect(await tx2).to.be.ok;
       await expect(
-        r1155.connect(acc02).setURI(basic.address, "null"),
+        r1155
+          .connect(acc02)
+          .setBaseURI(basic.address, "null"),
       ).to.be.revertedWithCustomError(
         basic,
-        RouterErrors.UriLocked,
+        RouterErrors.URILocked,
       );
     });
 
@@ -155,13 +155,13 @@ describe("MADRouter1155", () => {
       );
       const tx = await r1155
         .connect(acc02)
-        .setURI(basicAddr, "null");
+        .setBaseURI(basicAddr, "null");
 
       expect(tx).to.be.ok;
       await expect(tx)
-        .to.emit(r1155, "BaseURI")
+        .to.emit(r1155, "BaseURISet")
         .withArgs(colID, "null");
-      expect(await basic.callStatic.getURI()).to.eq("null");
+      expect(await basic.callStatic.baseURI()).to.eq("null");
       const verArt = await artifacts.readArtifact(
         "FactoryVerifier",
       );
@@ -171,7 +171,7 @@ describe("MADRouter1155", () => {
         ethers.provider,
       );
       await expect(
-        r1155.connect(acc01).setURI(basicAddr, "void"),
+        r1155.connect(acc01).setBaseURI(basicAddr, "void"),
       ).to.be.revertedWithCustomError(
         ver,
         RouterErrors.AccessDenied,
@@ -898,9 +898,9 @@ describe("MADRouter1155", () => {
       await expect(
         r1155.connect(acc01).pause(),
       ).to.be.revertedWith(RouterErrors.Unauthorized);
-      await expect(r1155.setURI(addr, "")).to.be.revertedWith(
-        RouterErrors.Paused,
-      );
+      await expect(
+        r1155.setBaseURI(addr, ""),
+      ).to.be.revertedWith(RouterErrors.Paused);
 
       await expect(
         r1155.burn(

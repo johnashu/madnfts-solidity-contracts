@@ -930,18 +930,8 @@ describe("MADMarketplace1155 - ERC20 Payments", () => {
     // user withdraw
     // with one bid stuck because the contract is paused
 
-    console.log(
-      await m1155.connect(acc01).getOutbidBalance(),
-    );
-    console.log(
-      await m1155.connect(acc03).getOutbidBalance(),
-    );
-    console.log(await erc20.balanceOf(m1155.address));
-
     await mine(600);
     await m1155.pause();
-
-    console.log(await m1155.totalOutbid());
 
     expect(await m1155.totalOutbid()).to.be.equal(
       ethers.utils.parseEther("1.1"),
@@ -951,13 +941,6 @@ describe("MADMarketplace1155 - ERC20 Payments", () => {
     );
 
     // withdraw after pause
-    console.log(await m1155.owner());
-    console.log(owner.address);
-    console.log(
-      (await erc20.balanceOf(m1155.address))
-        .sub(await m1155.totalOutbid())
-        .toString(),
-    );
     await m1155.connect(owner).withdrawERC20();
 
     // withdraw outbids
@@ -985,17 +968,6 @@ describe("MADMarketplace1155 - ERC20 Payments", () => {
     );
     expect(await erc20.balanceOf(m1155.address)).to.be.equal(
       ethers.utils.parseEther("0"),
-    );
-
-    console.log(await m1155.totalOutbid());
-    console.log(
-      await m1155.connect(owner).getOutbidBalance(),
-    );
-    console.log(
-      await m1155.connect(acc01).getOutbidBalance(),
-    );
-    console.log(
-      await m1155.connect(acc03).getOutbidBalance(),
     );
   });
 });

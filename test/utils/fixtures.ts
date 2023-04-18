@@ -262,6 +262,8 @@ export async function basicFixture721ERC20(): Promise<SplitterAndBasic721ERC20> 
     "ERC721Basic",
   );
 
+  console.log(owner.address);
+
   const basic = (await Basic.deploy(
     "721Basic",
     "BASIC",

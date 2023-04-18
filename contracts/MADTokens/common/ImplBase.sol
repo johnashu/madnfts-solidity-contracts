@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 
 pragma solidity 0.8.19;
-import { ERC721BasicEventsAndErrors } from "contracts/lib/tokens/ERC721/Base/interfaces/ERC721EventAndErrors.sol";
-import { ERC721, ERC721TokenReceiver } from "contracts/lib/tokens/ERC721/Base/ERC721.sol";
+
+import { ImplBaseEventsAndErrors } from "contracts/MADTokens/common/interfaces/ImplBaseEventsAndErrors.sol";
 import { ERC2981 } from "contracts/lib/tokens/common/ERC2981.sol";
 import { ERC20 } from "contracts/lib/tokens/ERC20.sol";
 import { Owned } from "contracts/lib/auth/Owned.sol";
@@ -13,7 +13,7 @@ import { Strings } from "contracts/lib/utils/Strings.sol";
 import { SafeTransferLib } from "contracts/lib/utils/SafeTransferLib.sol";
 import { FeeOracle } from "contracts/lib/tokens/common/FeeOracle.sol";
 
-contract ERC721Basic is ERC721, ERC2981, ERC721BasicEventsAndErrors, ERC721TokenReceiver, Owned, ReentrancyGuard {
+abstract contract ImplBase is ERC2981, ImplBaseEventsAndErrors, Owned, ReentrancyGuard {
     using Counters for Counters.Counter;
     using Strings for uint256;
 
@@ -28,19 +28,19 @@ contract ERC721Basic is ERC721, ERC2981, ERC721BasicEventsAndErrors, ERC721Token
     ERC20 public erc20;
 
     /// @notice Live supply counter, excludes burned tokens.
-    Counters.Counter private liveSupply;
+    Counters.Counter public liveSupply;
 
     /// @notice Mint counter, includes burnt count.
-    uint256 private mintCount;
+    uint256 public mintCount;
 
     /// @notice Fee counter.
     uint256 public feeCount;
 
     /// @notice Token base URI string.
-    string private baseURI;
+    string public baseURI;
 
     /// @notice Lock the URI default := false.
-    bool public baseURILock;
+    bool public uriLock;
 
     /// @notice Public mint price.
     uint256 public price;
@@ -78,8 +78,6 @@ contract ERC721Basic is ERC721, ERC2981, ERC721BasicEventsAndErrors, ERC721Token
     ////////////////////////////////////////////////////////////////
 
     constructor(
-        string memory _name,
-        string memory _symbol,
         string memory _baseURI,
         uint256 _price,
         uint256 _maxSupply,
@@ -87,7 +85,7 @@ contract ERC721Basic is ERC721, ERC2981, ERC721BasicEventsAndErrors, ERC721Token
         uint96 _fraction,
         address _router,
         ERC20 _erc20
-    ) ERC721(_name, _symbol) Owned(_router) {
+    ) Owned(_router) {
         baseURI = _baseURI;
         price = _price;
         maxSupply = _maxSupply;
@@ -104,73 +102,28 @@ contract ERC721Basic is ERC721, ERC2981, ERC721BasicEventsAndErrors, ERC721Token
     //                         OWNER FX                           //
     ////////////////////////////////////////////////////////////////
 
-    function setBaseURI(string memory _baseURI) external onlyOwner {
-        if (baseURILock == true) revert UriLocked();
+    function setBaseURI(string memory _baseURI) public onlyOwner {
+        if (uriLock == true) revert URILocked();
         baseURI = _baseURI;
         emit BaseURISet(_baseURI);
     }
 
-    function setBaseURILock() external onlyOwner {
-        baseURILock = true;
+    function setBaseURILock() public onlyOwner {
+        uriLock = true;
         emit BaseURILocked(baseURI);
     }
 
-    function setPublicMintState(bool _publicMintState) external onlyOwner {
+    function setPublicMintState(bool _publicMintState) public onlyOwner {
         publicMintState = _publicMintState;
 
         emit PublicMintStateSet(_publicMintState);
     }
 
     ////////////////////////////////////////////////////////////////
-    //                       OWNER MINTING                        //
+    //                       OWNER WITHDRAW                        //
     ////////////////////////////////////////////////////////////////
 
-    function mintTo(address to, uint256 amount, address erc20Owner) external payable onlyOwner hasReachedMax(amount) {
-        _paymentCheck(erc20Owner, 0);
-        uint256 i;
-        // for (uint256 i = 0; i < amount; i++) {
-        for (i; i < amount; ) {
-            _safeMint(to, _incrementCounter());
-            unchecked {
-                ++i;
-            }
-        }
-
-        assembly {
-            if lt(i, amount) {
-                // LoopOverflow()
-                mstore(0x00, 0xdfb035c9)
-                revert(0x1c, 0x04)
-            }
-        }
-        // Transfer event emited by parent ERC721 contract
-    }
-
-    function burn(uint256[] memory ids, address erc20Owner) external payable onlyOwner {
-        _paymentCheck(erc20Owner, 1);
-
-        uint256 i;
-        uint256 len = ids.length;
-        // for (uint256 i = 0; i < ids.length; i++) {
-        for (i; i < len; ) {
-            // delId();
-            liveSupply.decrement();
-            _burn(ids[i]);
-            unchecked {
-                ++i;
-            }
-        }
-        assembly {
-            if lt(i, len) {
-                // LoopOverflow()
-                mstore(0x00, 0xdfb035c9)
-                revert(0x1c, 0x04)
-            }
-        }
-        // Transfer event emited by parent ERC721 contract
-    }
-
-    function withdraw(address recipient) external onlyOwner {
+    function withdraw(address recipient) public onlyOwner {
         uint256 len = splitter.payeesLength();
         address[] memory addrs = new address[](len);
         uint256[] memory values = new uint256[](len);
@@ -201,7 +154,7 @@ contract ERC721Basic is ERC721, ERC2981, ERC721BasicEventsAndErrors, ERC721Token
         }
     }
 
-    function withdrawERC20(ERC20 _token, address recipient) external onlyOwner {
+    function withdrawERC20(ERC20 _token, address recipient) public onlyOwner {
         uint256 len = splitter.payeesLength();
         address[] memory addrs = new address[](len);
         uint256[] memory values = new uint256[](len);
@@ -235,51 +188,27 @@ contract ERC721Basic is ERC721, ERC2981, ERC721BasicEventsAndErrors, ERC721Token
     }
 
     ////////////////////////////////////////////////////////////////
-    //                          PUBLIC FX                         //
+    //                          HELPER FX                         //
     ////////////////////////////////////////////////////////////////
 
-    function mint(
-        uint256 amount
-    ) external payable nonReentrant publicMintAccess hasReachedMax(amount) publicMintPriceCheck(price, amount) {
-        _paymentCheck(msg.sender, 2);
-        uint256 i;
-        // for (uint256 i = 0; i < amount; i++) {
-        for (i; i < amount; ) {
-            _safeMint(msg.sender, _incrementCounter());
-            unchecked {
-                ++i;
-            }
-        }
+    function _incrementCounter() internal returns (uint256) {
+        liveSupply.increment();
+        mintCount += 1;
+        return mintCount;
+    }
 
-        assembly {
-            if lt(i, amount) {
-                // LoopOverflow()
-                mstore(0x00, 0xdfb035c9)
-                revert(0x1c, 0x04)
-            }
-        }
-        // Transfer event emited by parent ERC721 contract
+    function _incrementCounter(uint256 amount) internal returns (uint256) {
+        liveSupply.increment(amount);
+        mintCount += amount;
+        return mintCount;
     }
 
     ////////////////////////////////////////////////////////////////
     //                           VIEW FX                          //
     ////////////////////////////////////////////////////////////////
 
-    function getBaseURI() external view returns (string memory) {
-        return baseURI;
-    }
-
-    function tokenURI(uint256 id) public view virtual override returns (string memory) {
-        if (id > mintCount) revert NotMintedYet();
-        return string(abi.encodePacked(baseURI, Strings.toString(id), ".json"));
-    }
-
     function totalSupply() public view returns (uint256) {
         return liveSupply.current();
-    }
-
-    function getMintCount() public view returns (uint256) {
-        return mintCount;
     }
 
     ////////////////////////////////////////////////////////////////
@@ -318,12 +247,6 @@ contract ERC721Basic is ERC721, ERC2981, ERC721BasicEventsAndErrors, ERC721Token
         }
     }
 
-    function _incrementCounter() private returns (uint256) {
-        liveSupply.increment();
-        mintCount += 1;
-        return mintCount;
-    }
-
     function _getPriceValue(address _erc20Owner) internal view returns (uint256 value) {
         value = (address(erc20) != address(0)) ? erc20.allowance(_erc20Owner, address(this)) : msg.value;
     }
@@ -335,21 +258,5 @@ contract ERC721Basic is ERC721, ERC2981, ERC721BasicEventsAndErrors, ERC721Token
             _size := extcodesize(_owner)
         }
         value = _size == 0 ? 0 : FeeOracle(owner).feeLookup(_method);
-    }
-
-    ////////////////////////////////////////////////////////////////
-    //                     REQUIRED OVERRIDES                     //
-    ////////////////////////////////////////////////////////////////
-
-    function supportsInterface(bytes4 interfaceId) public pure virtual override(ERC721, ERC2981) returns (bool) {
-        return
-            // ERC165 Interface ID for ERC165
-            interfaceId == 0x01ffc9a7 ||
-            // ERC165 Interface ID for ERC721
-            interfaceId == 0x80ac58cd ||
-            // ERC165 Interface ID for ERC721Metadata
-            interfaceId == 0x5b5e139f ||
-            // ERC165 Interface ID for ERC2981
-            interfaceId == 0x2a55205a;
     }
 }

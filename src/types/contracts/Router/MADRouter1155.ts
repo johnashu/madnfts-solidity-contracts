@@ -48,12 +48,12 @@ export interface MADRouter1155Interface extends utils.Interface {
     "pause()": FunctionFragment;
     "paused()": FunctionFragment;
     "recipient()": FunctionFragment;
+    "setBaseURI(address,string)": FunctionFragment;
     "setFactory(address)": FunctionFragment;
     "setFees(uint256,uint256)": FunctionFragment;
     "setMintState(address,bool)": FunctionFragment;
     "setOwner(address)": FunctionFragment;
     "setRecipient(address)": FunctionFragment;
-    "setURI(address,string)": FunctionFragment;
     "setURILock(address)": FunctionFragment;
     "unpause()": FunctionFragment;
     "withdraw(address,address)": FunctionFragment;
@@ -77,12 +77,12 @@ export interface MADRouter1155Interface extends utils.Interface {
       | "pause"
       | "paused"
       | "recipient"
+      | "setBaseURI"
       | "setFactory"
       | "setFees"
       | "setMintState"
       | "setOwner"
       | "setRecipient"
-      | "setURI"
       | "setURILock"
       | "unpause"
       | "withdraw"
@@ -149,6 +149,10 @@ export interface MADRouter1155Interface extends utils.Interface {
   encodeFunctionData(functionFragment: "paused", values?: undefined): string;
   encodeFunctionData(functionFragment: "recipient", values?: undefined): string;
   encodeFunctionData(
+    functionFragment: "setBaseURI",
+    values: [PromiseOrValue<string>, PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
     functionFragment: "setFactory",
     values: [PromiseOrValue<string>]
   ): string;
@@ -167,10 +171,6 @@ export interface MADRouter1155Interface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "setRecipient",
     values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "setURI",
-    values: [PromiseOrValue<string>, PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
     functionFragment: "setURILock",
@@ -204,6 +204,7 @@ export interface MADRouter1155Interface extends utils.Interface {
   decodeFunctionResult(functionFragment: "pause", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "paused", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "recipient", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "setBaseURI", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "setFactory", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "setFees", data: BytesLike): Result;
   decodeFunctionResult(
@@ -215,13 +216,12 @@ export interface MADRouter1155Interface extends utils.Interface {
     functionFragment: "setRecipient",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "setURI", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "setURILock", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "unpause", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "withdraw", data: BytesLike): Result;
 
   events: {
-    "BaseURI(bytes32,string)": EventFragment;
+    "BaseURISet(bytes32,string)": EventFragment;
     "FactoryUpdated(address)": EventFragment;
     "FeesUpdated(uint256,uint256)": EventFragment;
     "FreeClaimState(bytes32,uint8,bool)": EventFragment;
@@ -235,7 +235,7 @@ export interface MADRouter1155Interface extends utils.Interface {
     "WhitelistMintState(bytes32,uint8,bool)": EventFragment;
   };
 
-  getEvent(nameOrSignatureOrTopic: "BaseURI"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "BaseURISet"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "FactoryUpdated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "FeesUpdated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "FreeClaimState"): EventFragment;
@@ -249,13 +249,16 @@ export interface MADRouter1155Interface extends utils.Interface {
   getEvent(nameOrSignatureOrTopic: "WhitelistMintState"): EventFragment;
 }
 
-export interface BaseURIEventObject {
+export interface BaseURISetEventObject {
   _id: string;
   _baseURI: string;
 }
-export type BaseURIEvent = TypedEvent<[string, string], BaseURIEventObject>;
+export type BaseURISetEvent = TypedEvent<
+  [string, string],
+  BaseURISetEventObject
+>;
 
-export type BaseURIEventFilter = TypedEventFilter<BaseURIEvent>;
+export type BaseURISetEventFilter = TypedEventFilter<BaseURISetEvent>;
 
 export interface FactoryUpdatedEventObject {
   newFactory: string;
@@ -463,6 +466,12 @@ export interface MADRouter1155 extends BaseContract {
 
     recipient(overrides?: CallOverrides): Promise<[string]>;
 
+    setBaseURI(
+      _token: PromiseOrValue<string>,
+      _uri: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     setFactory(
       _factory: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -487,12 +496,6 @@ export interface MADRouter1155 extends BaseContract {
 
     setRecipient(
       _recipient: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    setURI(
-      _token: PromiseOrValue<string>,
-      _uri: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -573,6 +576,12 @@ export interface MADRouter1155 extends BaseContract {
 
   recipient(overrides?: CallOverrides): Promise<string>;
 
+  setBaseURI(
+    _token: PromiseOrValue<string>,
+    _uri: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   setFactory(
     _factory: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -597,12 +606,6 @@ export interface MADRouter1155 extends BaseContract {
 
   setRecipient(
     _recipient: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  setURI(
-    _token: PromiseOrValue<string>,
-    _uri: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -681,6 +684,12 @@ export interface MADRouter1155 extends BaseContract {
 
     recipient(overrides?: CallOverrides): Promise<string>;
 
+    setBaseURI(
+      _token: PromiseOrValue<string>,
+      _uri: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     setFactory(
       _factory: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -708,12 +717,6 @@ export interface MADRouter1155 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    setURI(
-      _token: PromiseOrValue<string>,
-      _uri: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
     setURILock(
       _token: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -729,14 +732,14 @@ export interface MADRouter1155 extends BaseContract {
   };
 
   filters: {
-    "BaseURI(bytes32,string)"(
+    "BaseURISet(bytes32,string)"(
       _id?: PromiseOrValue<BytesLike> | null,
       _baseURI?: PromiseOrValue<string> | null
-    ): BaseURIEventFilter;
-    BaseURI(
+    ): BaseURISetEventFilter;
+    BaseURISet(
       _id?: PromiseOrValue<BytesLike> | null,
       _baseURI?: PromiseOrValue<string> | null
-    ): BaseURIEventFilter;
+    ): BaseURISetEventFilter;
 
     "FactoryUpdated(address)"(
       newFactory?: PromiseOrValue<string> | null
@@ -887,6 +890,12 @@ export interface MADRouter1155 extends BaseContract {
 
     recipient(overrides?: CallOverrides): Promise<BigNumber>;
 
+    setBaseURI(
+      _token: PromiseOrValue<string>,
+      _uri: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     setFactory(
       _factory: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -911,12 +920,6 @@ export interface MADRouter1155 extends BaseContract {
 
     setRecipient(
       _recipient: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    setURI(
-      _token: PromiseOrValue<string>,
-      _uri: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -998,6 +1001,12 @@ export interface MADRouter1155 extends BaseContract {
 
     recipient(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    setBaseURI(
+      _token: PromiseOrValue<string>,
+      _uri: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
     setFactory(
       _factory: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -1022,12 +1031,6 @@ export interface MADRouter1155 extends BaseContract {
 
     setRecipient(
       _recipient: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    setURI(
-      _token: PromiseOrValue<string>,
-      _uri: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 

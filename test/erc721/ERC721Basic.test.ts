@@ -88,6 +88,9 @@ describe("ERC721Basic", () => {
       await splitter.deployed();
       expect(basic).to.be.ok;
       expect(splitter).to.be.ok;
+      expect(await basic.callStatic.owner()).to.eq(
+        owner.address,
+      );
       expect(await basic.callStatic.name()).to.eq("721Basic");
       expect(await basic.callStatic.symbol()).to.eq("BASIC");
       expect(await basic.callStatic.price()).to.eq(price);
@@ -121,8 +124,6 @@ describe("ERC721Basic", () => {
       // can't be eq to ethAmount due to contract deployment cost
       res = await ethers.provider.getBalance(owner.address);
       expect(res.toString()).to.have.lengthOf(22);
-      // console.log(res); // lengthOf = 22
-      // console.log(ethAmount); // lengthOf = 23
 
       // those should eq to hardhat prefunded account's value
       expect(
@@ -146,7 +147,8 @@ describe("ERC721Basic", () => {
       const set = await basic
         .connect(owner)
         .setBaseURI(change);
-      const check = await basic.callStatic.getBaseURI();
+
+      const check = await basic.callStatic.baseURI();
       const setFail = basic.connect(acc01).setBaseURI("fail");
 
       expect(set).to.be.ok;
@@ -155,6 +157,7 @@ describe("ERC721Basic", () => {
       await expect(set)
         .to.emit(basic, "BaseURISet")
         .withArgs(change);
+
       await expect(setFail).to.be.revertedWith(
         BasicErrors.Unauthorized,
       );
@@ -344,8 +347,7 @@ describe("ERC721Basic", () => {
       const approved2 = await basic.callStatic.getApproved(2);
       const approved3 = await basic.callStatic.getApproved(3);
       const approved4 = await basic.callStatic.getApproved(4);
-      const mintCounter =
-        await basic.callStatic.getMintCount();
+      const mintCounter = await basic.callStatic.mintCount();
 
       expect(tx).to.be.ok;
       expect(bal1).to.eq(2);
@@ -489,14 +491,14 @@ describe("ERC721Basic", () => {
     });
 
     it("Should query mint count", async () => {
-      const tx = await basic.callStatic.getMintCount();
+      const tx = await basic.callStatic.mintCount();
       expect(tx).to.be.ok;
       expect(tx).to.eq(0);
     });
 
     it("Should query base uri", async () => {
       const base = "ipfs://cid/";
-      const tx = await basic.callStatic.getBaseURI();
+      const tx = await basic.callStatic.baseURI();
 
       expect(tx).to.be.ok;
       expect(tx).to.eq(base);

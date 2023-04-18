@@ -4,8 +4,5 @@
 
 /* eslint-disable */
 import type * as base from "./Base";
-import type * as impl from "./Impl";
 
 export type { base };
-
-export type { impl };

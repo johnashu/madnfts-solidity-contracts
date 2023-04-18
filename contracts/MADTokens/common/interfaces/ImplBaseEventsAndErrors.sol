@@ -2,7 +2,7 @@
 
 pragma solidity 0.8.19;
 
-interface ERC1155BasicEventsAndErrors {
+interface ImplBaseEventsAndErrors {
     ////////////////////////////////////////////////////////////////
     //                           EVENTS                           //
     ////////////////////////////////////////////////////////////////
@@ -28,5 +28,5 @@ interface ERC1155BasicEventsAndErrors {
     /// @dev 0xdfb035c9
     error LoopOverflow();
     /// @dev ?
-    error UriLocked();
+    error URILocked();
 }

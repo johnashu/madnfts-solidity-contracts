@@ -413,7 +413,7 @@ contract ERC721Lazy is
     //                           VIEW FX                          //
     ////////////////////////////////////////////////////////////////
 
-    function getBaseURI()
+    function baseURI()
         external
         view
         returns (string memory)
@@ -439,7 +439,7 @@ contract ERC721Lazy is
         return liveSupply.current();
     }
 
-    function getMintCount() public view returns (uint256) {
+    function mintCount() public view returns (uint256) {
         return mintCount;
     }
 
