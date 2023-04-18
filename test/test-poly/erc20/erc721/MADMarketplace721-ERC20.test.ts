@@ -18,13 +18,13 @@ import {
   MADRouter721,
   MockERC20,
   MockERC20__factory,
-} from "../../../src/types";
+} from "../../../../src/types";
 // import { MarketplaceErrors } from "../../../test/utils/errors";
 import {
   dead,
   getOrderId721,
   madFixture721F,
-} from "../../../test/utils/madFixtures";
+} from "../../../utils/madFixtures";
 
 describe("MADMarketplace721 - ERC20 Payments", () => {
   type WalletWithAddress = Wallet & SignerWithAddress;
@@ -73,8 +73,6 @@ describe("MADMarketplace721 - ERC20 Payments", () => {
     await r721.deployed();
     await m721.deployed();
     await f721.deployed();
-    // await erc20.transfer(acc01.address, erc20Balance);
-    // await erc20.transfer(acc02.address, erc20Balance);
     let tx = await acc01.sendTransaction({
       to: erc20.address,
       value: erc20Balance,
@@ -132,25 +130,25 @@ describe("MADMarketplace721 - ERC20 Payments", () => {
       const splAddr = await f721.callStatic.getDeployedAddr(
         "MADSplitter1",
       );
-      const minAddr = await f721.callStatic.getDeployedAddr(
-        "MinSalt",
+      const basicAddr = await f721.callStatic.getDeployedAddr(
+        "BasicSalt",
       );
       await f721
         .connect(acc02)
         .createCollection(
-          0,
-          "MinSalt",
-          "721Minimal",
-          "MIN",
+          1,
+          "BasicSalt",
+          "721Basic",
+          "BASIC",
           price,
           1,
           "cid/id.json",
           splAddr,
           1000,
         );
-      const min = await ethers.getContractAt(
-        "ERC721Minimal",
-        minAddr,
+      const basic = await ethers.getContractAt(
+        "ERC721Basic",
+        basicAddr,
       );
       const splitter = await ethers.getContractAt(
         "SplitterImpl",
@@ -166,7 +164,7 @@ describe("MADMarketplace721 - ERC20 Payments", () => {
         );
       await r721
         .connect(acc02)
-        .minimalSafeMint(min.address, acc02.address);
+        .basicMintTo(basic.address, acc02.address, 1);
 
       // acc02 = erc20Balance - 0.25
       expect(await erc20.balanceOf(acc02.address)).to.equal(
@@ -174,7 +172,7 @@ describe("MADMarketplace721 - ERC20 Payments", () => {
       );
 
       // List token
-      const tx = await min
+      const tx = await basic
         .connect(acc02)
         .approve(m721.address, 1);
       const blockTimestamp = (
@@ -183,7 +181,7 @@ describe("MADMarketplace721 - ERC20 Payments", () => {
       const fpTx = await m721
         .connect(acc02)
         .englishAuction(
-          min.address,
+          basic.address,
           1,
           ethers.utils.parseEther("0.1"),
           blockTimestamp + 301,
@@ -192,7 +190,7 @@ describe("MADMarketplace721 - ERC20 Payments", () => {
       const fpBn = fpRc.blockNumber;
       const fpOrderId = getOrderId721(
         fpBn,
-        min.address,
+        basic.address,
         1,
         acc02.address,
       );
@@ -223,7 +221,7 @@ describe("MADMarketplace721 - ERC20 Payments", () => {
       await expect(claimTx)
         .to.be.ok.and.to.emit(m721, "Claim")
         .withArgs(
-          minAddr,
+          basicAddr,
           1,
           fpOrderId,
           acc02.address,
@@ -320,25 +318,25 @@ describe("MADMarketplace721 - ERC20 Payments", () => {
     const splAddr = await f721.callStatic.getDeployedAddr(
       "MADSplitter1",
     );
-    const minAddr = await f721.callStatic.getDeployedAddr(
-      "MinSalt",
+    const basicAddr = await f721.callStatic.getDeployedAddr(
+      "BasicSalt",
     );
     await f721
       .connect(acc02)
       .createCollection(
-        0,
-        "MinSalt",
-        "721Minimal",
-        "MIN",
+        1,
+        "BasicSalt",
+        "721Basic",
+        "BASIC",
         price,
         1,
         "cid/id.json",
         splAddr,
         1000,
       );
-    const min = await ethers.getContractAt(
-      "ERC721Minimal",
-      minAddr,
+    const basic = await ethers.getContractAt(
+      "ERC721Basic",
+      basicAddr,
     );
     const splitter = await ethers.getContractAt(
       "SplitterImpl",
@@ -351,7 +349,7 @@ describe("MADMarketplace721 - ERC20 Payments", () => {
       .approve(r721.address, ethers.utils.parseEther("0.25"));
     await r721
       .connect(acc02)
-      .minimalSafeMint(min.address, acc02.address);
+      .basicMintTo(basic.address, acc02.address, 1);
 
     // acc02 = erc20Balance - 0.25
     expect(await erc20.balanceOf(acc02.address)).to.equal(
@@ -359,7 +357,7 @@ describe("MADMarketplace721 - ERC20 Payments", () => {
     );
 
     // List token
-    const tx = await min
+    const tx = await basic
       .connect(acc02)
       .approve(m721.address, 1);
     const blockTimestamp = (
@@ -368,7 +366,7 @@ describe("MADMarketplace721 - ERC20 Payments", () => {
     const fpTx = await m721
       .connect(acc02)
       .englishAuction(
-        min.address,
+        basic.address,
         1,
         ethers.utils.parseEther("0.1"),
         blockTimestamp + 301,
@@ -377,7 +375,7 @@ describe("MADMarketplace721 - ERC20 Payments", () => {
     const fpBn = fpRc.blockNumber;
     const fpOrderId = getOrderId721(
       fpBn,
-      min.address,
+      basic.address,
       1,
       acc02.address,
     );
@@ -405,7 +403,7 @@ describe("MADMarketplace721 - ERC20 Payments", () => {
     await expect(claimTx)
       .to.be.ok.and.to.emit(m721, "Claim")
       .withArgs(
-        minAddr,
+        basicAddr,
         1,
         fpOrderId,
         acc02.address,
@@ -515,25 +513,25 @@ describe("MADMarketplace721 - ERC20 Payments", () => {
     const splAddr = await f721.callStatic.getDeployedAddr(
       "MADSplitter1",
     );
-    const minAddr = await f721.callStatic.getDeployedAddr(
-      "MinSalt",
+    const basicAddr = await f721.callStatic.getDeployedAddr(
+      "BasicSalt",
     );
     await f721
       .connect(acc02)
       .createCollection(
-        0,
-        "MinSalt",
-        "721Minimal",
-        "MIN",
+        1,
+        "BasicSalt",
+        "721Basic",
+        "BASIC",
         price,
         1,
         "cid/id.json",
         splAddr,
         1000,
       );
-    const min = await ethers.getContractAt(
-      "ERC721Minimal",
-      minAddr,
+    const basic = await ethers.getContractAt(
+      "ERC721Basic",
+      basicAddr,
     );
     const splitter = await ethers.getContractAt(
       "SplitterImpl",
@@ -546,7 +544,7 @@ describe("MADMarketplace721 - ERC20 Payments", () => {
       .approve(r721.address, ethers.utils.parseEther("0.25"));
     await r721
       .connect(acc02)
-      .minimalSafeMint(min.address, acc02.address);
+      .basicMintTo(basic.address, acc02.address, 1);
 
     // acc02 = erc20Balance - 0.25
     expect(await erc20.balanceOf(acc02.address)).to.equal(
@@ -554,7 +552,7 @@ describe("MADMarketplace721 - ERC20 Payments", () => {
     );
 
     // List token
-    const tx = await min
+    const tx = await basic
       .connect(acc02)
       .approve(m721.address, 1);
     const blockTimestamp = (
@@ -563,7 +561,7 @@ describe("MADMarketplace721 - ERC20 Payments", () => {
     const fpTx = await m721
       .connect(acc02)
       .englishAuction(
-        min.address,
+        basic.address,
         1,
         ethers.utils.parseEther("0.1"),
         blockTimestamp + 301,
@@ -572,7 +570,7 @@ describe("MADMarketplace721 - ERC20 Payments", () => {
     const fpBn = fpRc.blockNumber;
     const fpOrderId = getOrderId721(
       fpBn,
-      min.address,
+      basic.address,
       1,
       acc02.address,
     );
@@ -627,7 +625,7 @@ describe("MADMarketplace721 - ERC20 Payments", () => {
         .sub(await m721.totalOutbid())
         .toString(),
     );
-    await m721.connect(owner).withdrawERC20(erc20.address);
+    await m721.connect(owner).withdrawERC20();
 
     // withdraw outbids
     await m721
@@ -644,9 +642,8 @@ describe("MADMarketplace721 - ERC20 Payments", () => {
       ethers.utils.parseEther("0"),
     );
 
-    await expect(
-      m721.connect(owner).withdrawERC20(erc20.address),
-    ).to.be.reverted;
+    await expect(m721.connect(owner).withdrawERC20()).to.be
+      .reverted;
   });
 
   it("Test full end-to-end purchase and then withdraw; pause then clear the contract of the tokens (outbid and sold out and auto-withdraw)", async () => {
@@ -670,25 +667,25 @@ describe("MADMarketplace721 - ERC20 Payments", () => {
     const splAddr = await f721.callStatic.getDeployedAddr(
       "MADSplitter1",
     );
-    const minAddr = await f721.callStatic.getDeployedAddr(
-      "MinSalt",
+    const basicAddr = await f721.callStatic.getDeployedAddr(
+      "BasicSalt",
     );
     await f721
       .connect(acc02)
       .createCollection(
-        0,
-        "MinSalt",
-        "721Minimal",
-        "MIN",
+        1,
+        "BasicSalt",
+        "721Basic",
+        "BASIC",
         price,
         1,
         "cid/id.json",
         splAddr,
         1000,
       );
-    const min = await ethers.getContractAt(
-      "ERC721Minimal",
-      minAddr,
+    const basic = await ethers.getContractAt(
+      "ERC721Basic",
+      basicAddr,
     );
     const splitter = await ethers.getContractAt(
       "SplitterImpl",
@@ -701,7 +698,7 @@ describe("MADMarketplace721 - ERC20 Payments", () => {
       .approve(r721.address, ethers.utils.parseEther("0.25"));
     await r721
       .connect(acc02)
-      .minimalSafeMint(min.address, acc02.address);
+      .basicMintTo(basic.address, acc02.address, 1);
 
     // acc02 = erc20Balance - 0.25
     expect(await erc20.balanceOf(acc02.address)).to.equal(
@@ -709,7 +706,7 @@ describe("MADMarketplace721 - ERC20 Payments", () => {
     );
 
     // List token
-    const tx = await min
+    const tx = await basic
       .connect(acc02)
       .approve(m721.address, 1);
     const blockTimestamp = (
@@ -718,7 +715,7 @@ describe("MADMarketplace721 - ERC20 Payments", () => {
     const fpTx = await m721
       .connect(acc02)
       .englishAuction(
-        min.address,
+        basic.address,
         1,
         ethers.utils.parseEther("0.1"),
         blockTimestamp + 301,
@@ -727,7 +724,7 @@ describe("MADMarketplace721 - ERC20 Payments", () => {
     const fpBn = fpRc.blockNumber;
     const fpOrderId = getOrderId721(
       fpBn,
-      min.address,
+      basic.address,
       1,
       acc02.address,
     );
@@ -781,7 +778,7 @@ describe("MADMarketplace721 - ERC20 Payments", () => {
         .sub(await m721.totalOutbid())
         .toString(),
     );
-    await m721.connect(owner).withdrawERC20(erc20.address);
+    await m721.connect(owner).withdrawERC20();
 
     // withdraw outbids
     await m721
@@ -796,9 +793,8 @@ describe("MADMarketplace721 - ERC20 Payments", () => {
       m721.connect(acc01).withdrawOutbid(erc20.address, 0, 0),
     ).to.be.reverted;
 
-    await expect(
-      m721.connect(owner).withdrawERC20(erc20.address),
-    ).to.be.reverted;
+    await expect(m721.connect(owner).withdrawERC20()).to.be
+      .reverted;
 
     expect(await m721.totalOutbid()).to.be.equal(
       ethers.utils.parseEther("0"),

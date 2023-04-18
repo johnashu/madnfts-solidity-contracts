@@ -7,11 +7,7 @@ pragma solidity 0.8.16;
 /// @author Modified from Solmate (https://github.com/Rari-Capital/solmate/blob/main/src/utils/MerkleProof.sol)
 /// @author Modified from OpenZeppelin (https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/cryptography/MerkleProof.sol)
 library MerkleProof {
-    function verify(
-        bytes32[] calldata proof,
-        bytes32 root,
-        bytes32 leaf
-    ) internal pure returns (bool isValid) {
+    function verify(bytes32[] calldata proof, bytes32 root, bytes32 leaf) internal pure returns (bool isValid) {
         assembly {
             // Left shift by 5 is equivalent to multiplying by 0x20.
             let end := add(proof.offset, shl(5, proof.length))
@@ -25,18 +21,12 @@ library MerkleProof {
             } {
                 // Slot of `leaf` in scratch space.
                 // If the condition is true: 0x20, otherwise: 0x00.
-                let scratch := shl(
-                    5,
-                    gt(leaf, calldataload(offset))
-                )
+                let scratch := shl(5, gt(leaf, calldataload(offset)))
 
                 // Store elements to hash contiguously in scratch space.
                 // Scratch space is 64 bytes (0x00 - 0x3f) and both elements are 32 bytes.
                 mstore(scratch, leaf)
-                mstore(
-                    xor(scratch, 0x20),
-                    calldataload(offset)
-                )
+                mstore(xor(scratch, 0x20), calldataload(offset))
                 // Reuse `leaf` to store the hash to reduce stack operations.
                 leaf := keccak256(0x00, 0x40)
             }
@@ -60,16 +50,10 @@ library MerkleProof {
         // should be popped from the `proof` (`flag == false`).
         assembly {
             // If the number of flags is correct.
-            if eq(
-                add(leafs.length, proof.length),
-                add(flags.length, 1)
-            ) {
+            if eq(add(leafs.length, proof.length), add(flags.length, 1)) {
                 // Left shift by 5 is equivalent to multiplying by 0x20.
                 // Compute the end calldata offset of `leafs`.
-                let leafsEnd := add(
-                    leafs.offset,
-                    shl(5, leafs.length)
-                )
+                let leafsEnd := add(leafs.offset, shl(5, leafs.length))
                 // These are the calldata offsets.
                 let leafsOffset := leafs.offset
                 let flagsOffset := flags.offset
@@ -80,28 +64,19 @@ library MerkleProof {
                 let hashesFront := mload(0x40)
                 let hashesBack := hashesFront
                 // This is the end of the memory for the queue.
-                let end := add(
-                    hashesBack,
-                    shl(5, flags.length)
-                )
+                let end := add(hashesBack, shl(5, flags.length))
 
                 // For the case where `proof.length + leafs.length == 1`.
                 if iszero(flags.length) {
                     // If `proof.length` is zero, `leafs.length` is 1.
                     if iszero(proof.length) {
                         // Push the only leaf onto the queue.
-                        mstore(
-                            hashesBack,
-                            calldataload(leafsOffset)
-                        )
+                        mstore(hashesBack, calldataload(leafsOffset))
                     }
                     // If `leafs.length` is zero, `proof.length` is 1.
                     if iszero(leafs.length) {
                         // Push the only proof onto the queue.
-                        mstore(
-                            hashesBack,
-                            calldataload(proofOffset)
-                        )
+                        mstore(hashesBack, calldataload(proofOffset))
                     }
                     // Advance `hashesBack` to push onto the queue.
                     hashesBack := add(hashesBack, 0x20)
@@ -162,10 +137,7 @@ library MerkleProof {
                     hashesBack := add(hashesBack, 0x20)
                 }
                 // Checks if the last value in the queue is same as the root.
-                isValid := eq(
-                    mload(sub(hashesBack, 0x20)),
-                    root
-                )
+                isValid := eq(mload(sub(hashesBack, 0x20)), root)
             }
         }
     }

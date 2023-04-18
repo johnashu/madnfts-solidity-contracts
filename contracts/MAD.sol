@@ -25,9 +25,5 @@ pragma solidity 0.8.16;
 /// (https://spdx.org/licenses/AGPL-3.0-only.html)
 
 abstract contract MAD {
-    function name()
-        external
-        pure
-        virtual
-        returns (string memory);
+    function name() external pure virtual returns (string memory);
 }

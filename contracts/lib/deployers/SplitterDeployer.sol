@@ -15,10 +15,7 @@ library SplitterDeployer {
         salt = keccak256(bytes(_salt));
         deployed = CREATE3.deploy(
             salt,
-            abi.encodePacked(
-                type(SplitterImpl).creationCode,
-                abi.encode(_payees, _shares)
-            ),
+            abi.encodePacked(type(SplitterImpl).creationCode, abi.encode(_payees, _shares)),
             0
         );
     }

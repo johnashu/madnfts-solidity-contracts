@@ -13,11 +13,7 @@ interface SplitterEventsAndErrors {
 
     event PaymentReceived(address from, uint256 amount);
 
-    event ERC20PaymentReleased(
-        address indexed token,
-        address to,
-        uint256 amount
-    );
+    event ERC20PaymentReleased(address indexed token, address to, uint256 amount);
 
     ////////////////////////////////////////////////////////////////
     //                           ERRORS                           //

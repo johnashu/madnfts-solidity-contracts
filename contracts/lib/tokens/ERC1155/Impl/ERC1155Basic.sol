@@ -14,14 +14,7 @@ import { Strings } from "../../../utils/Strings.sol";
 import { SafeTransferLib } from "../../../utils/SafeTransferLib.sol";
 import { FeeOracle } from "../../common/FeeOracle.sol";
 
-contract ERC1155Basic is
-    ERC1155,
-    ERC2981,
-    ERC1155BasicEventsAndErrors,
-    ERC1155TokenReceiver,
-    Owned,
-    ReentrancyGuard
-{
+contract ERC1155Basic is ERC1155, ERC2981, ERC1155BasicEventsAndErrors, ERC1155TokenReceiver, Owned, ReentrancyGuard {
     using Counters for Counters.Counter;
     using Strings for uint256;
 
@@ -68,21 +61,16 @@ contract ERC1155Basic is
         _;
     }
 
-    modifier publicMintPriceCheck(
-        uint256 _price,
-        uint256 _amount
-    ) {
+    modifier publicMintPriceCheck(uint256 _price, uint256 _amount) {
         uint256 _fee = _getFeeValue(0x40d097c3);
         feeCount += _fee;
         uint256 value = _getPriceValue(msg.sender);
-        if ((_price * _amount) + _fee != value)
-            revert WrongPrice();
+        if ((_price * _amount) + _fee != value) revert WrongPrice();
         _;
     }
 
     modifier hasReachedMax(uint256 amount) {
-        if (mintCount + amount > maxSupply)
-            revert MaxSupplyReached();
+        if (mintCount + amount > maxSupply) revert MaxSupplyReached();
         _;
     }
 
@@ -127,9 +115,7 @@ contract ERC1155Basic is
         emit BaseURILocked(_uri);
     }
 
-    function setPublicMintState(
-        bool _publicMintState
-    ) external onlyOwner {
+    function setPublicMintState(bool _publicMintState) external onlyOwner {
         publicMintState = _publicMintState;
 
         emit PublicMintStateSet(_publicMintState);
@@ -144,12 +130,7 @@ contract ERC1155Basic is
         uint256 amount,
         uint256[] memory balance,
         address erc20Owner
-    )
-        external
-        payable
-        onlyOwner
-        hasReachedMax(_sumAmounts(balance) * amount)
-    {
+    ) external payable onlyOwner hasReachedMax(_sumAmounts(balance) * amount) {
         _paymentCheck(erc20Owner, 0);
         uint256 i;
         // for (uint256 i = 0; i < amount; i++) {
@@ -175,12 +156,7 @@ contract ERC1155Basic is
         uint256[] memory ids,
         uint256[] memory amounts,
         address erc20Owner
-    )
-        external
-        payable
-        onlyOwner
-        hasReachedMax(_sumAmounts(amounts))
-    {
+    ) external payable onlyOwner hasReachedMax(_sumAmounts(amounts)) {
         _paymentCheck(erc20Owner, 0);
         uint256 i;
         uint256 len = ids.length;
@@ -209,11 +185,7 @@ contract ERC1155Basic is
         _paymentCheck(erc20Owner, 1);
         uint256 i;
         uint256 len = ids.length;
-        require(
-            from.length == ids.length &&
-                ids.length == balances.length,
-            "LENGTH_MISMATCH"
-        );
+        require(from.length == ids.length && ids.length == balances.length, "LENGTH_MISMATCH");
         for (i; i < len; ) {
             liveSupply.decrement(balances[i]);
             _burn(from[i], ids[i], balances[i]);
@@ -236,10 +208,7 @@ contract ERC1155Basic is
         uint256[] memory amounts,
         address erc20Owner
     ) external payable onlyOwner {
-        require(
-            ids.length == amounts.length,
-            "LENGTH_MISMATCH"
-        );
+        require(ids.length == amounts.length, "LENGTH_MISMATCH");
         _paymentCheck(erc20Owner, 1);
         uint256 i;
         uint256 len = ids.length;
@@ -266,10 +235,7 @@ contract ERC1155Basic is
         uint256 _val;
         if (feeCount > 0 && recipient != address(0)) {
             _val = address(this).balance - feeCount;
-            SafeTransferLib.safeTransferETH(
-                payable(recipient),
-                feeCount
-            );
+            SafeTransferLib.safeTransferETH(payable(recipient), feeCount);
             feeCount = 0;
         } else {
             _val = address(this).balance;
@@ -286,20 +252,14 @@ contract ERC1155Basic is
         }
         uint256 j;
         while (j < len) {
-            SafeTransferLib.safeTransferETH(
-                addrs[j],
-                values[j]
-            );
+            SafeTransferLib.safeTransferETH(addrs[j], values[j]);
             unchecked {
                 ++j;
             }
         }
     }
 
-    function withdrawERC20(
-        ERC20 _token,
-        address recipient
-    ) external onlyOwner {
+    function withdrawERC20(ERC20 _token, address recipient) external onlyOwner {
         uint256 len = splitter.payeesLength();
         address[] memory addrs = new address[](len);
         uint256[] memory values = new uint256[](len);
@@ -307,11 +267,7 @@ contract ERC1155Basic is
         uint256 _val;
         if (feeCount > 0 && recipient != address(0)) {
             _val = _token.balanceOf(address(this)) - feeCount;
-            SafeTransferLib.safeTransfer(
-                _token,
-                recipient,
-                feeCount
-            );
+            SafeTransferLib.safeTransfer(_token, recipient, feeCount);
             feeCount = 0;
         } else {
             _val = _token.balanceOf(address(this));
@@ -329,11 +285,7 @@ contract ERC1155Basic is
         }
         uint256 j;
         while (j < len) {
-            SafeTransferLib.safeTransfer(
-                _token,
-                addrs[j],
-                values[j]
-            );
+            SafeTransferLib.safeTransfer(_token, addrs[j], values[j]);
             unchecked {
                 ++j;
             }
@@ -358,12 +310,7 @@ contract ERC1155Basic is
         _paymentCheck(msg.sender, 2);
         uint256 i;
         for (i; i < amount; ) {
-            _mint(
-                msg.sender,
-                _incrementCounter(1),
-                balance,
-                ""
-            );
+            _mint(msg.sender, _incrementCounter(1), balance, "");
             unchecked {
                 ++i;
             }
@@ -389,19 +336,11 @@ contract ERC1155Basic is
         hasReachedMax(_sumAmounts(amounts))
         publicMintPriceCheck(price, ids.length)
     {
-        require(
-            ids.length == amounts.length,
-            "MISMATCH_LENGTH"
-        );
+        require(ids.length == amounts.length, "MISMATCH_LENGTH");
         uint256 value = _getPriceValue(msg.sender);
         uint256 len = ids.length;
         if (address(erc20) != address(0)) {
-            SafeTransferLib.safeTransferFrom(
-                erc20,
-                msg.sender,
-                address(this),
-                value
-            );
+            SafeTransferLib.safeTransferFrom(erc20, msg.sender, address(this), value);
         }
         uint256 i;
         for (i; i < len; ) {
@@ -424,17 +363,13 @@ contract ERC1155Basic is
     //                          HELPER FX                         //
     ////////////////////////////////////////////////////////////////
 
-    function _incrementCounter(
-        uint256 amount
-    ) private returns (uint256) {
+    function _incrementCounter(uint256 amount) private returns (uint256) {
         liveSupply.increment(amount);
         mintCount += amount;
         return mintCount;
     }
 
-    function _sumAmounts(
-        uint256[] memory amounts
-    ) private pure returns (uint256 _result) {
+    function _sumAmounts(uint256[] memory amounts) private pure returns (uint256 _result) {
         uint256 len = amounts.length;
         uint256 i;
         for (i; i < len; ) {
@@ -453,9 +388,7 @@ contract ERC1155Basic is
         return _uri;
     }
 
-    function uri(
-        uint256 id
-    ) public view virtual override returns (string memory) {
+    function uri(uint256 id) public view virtual override returns (string memory) {
         if (id > mintCount) {
             // revert("NotMintedYet");
             assembly {
@@ -463,14 +396,7 @@ contract ERC1155Basic is
                 revert(0x1c, 0x04)
             }
         }
-        return
-            string(
-                abi.encodePacked(
-                    _uri,
-                    Strings.toString(id),
-                    ".json"
-                )
-            );
+        return string(abi.encodePacked(_uri, Strings.toString(id), ".json"));
     }
 
     function totalSupply() public view returns (uint256) {
@@ -490,38 +416,24 @@ contract ERC1155Basic is
     /// @dev If router deploy we check msg.value if !erc20 BUT checks erc20 approval and transfers are via the router
     /// @param _erc20Owner Non router deploy =msg.sender; Router deploy =payer.address (msg.sender = router.address)
     /// @param _type Passed to _feeCheck to determin the fee 0=mint; 1=burn; ELSE _feeCheck is ignored
-    function _paymentCheck(
-        address _erc20Owner,
-        uint8 _type
-    ) internal {
+    function _paymentCheck(address _erc20Owner, uint8 _type) internal {
         uint256 value = _getPriceValue(_erc20Owner);
 
         // Check fees are paid
         // ERC20 fees for router calls are checked and transfered via in the router
-        if (
-            address(msg.sender) == address(_erc20Owner) ||
-            (address(erc20) == address(0))
-        ) {
+        if (address(msg.sender) == address(_erc20Owner) || (address(erc20) == address(0))) {
             if (_type == 0) {
                 _feeCheck(0x40d097c3, value);
             } else if (_type == 1) {
                 _feeCheck(0x44df8e70, value);
             }
             if (address(erc20) != address(0)) {
-                SafeTransferLib.safeTransferFrom(
-                    erc20,
-                    _erc20Owner,
-                    address(this),
-                    value
-                );
+                SafeTransferLib.safeTransferFrom(erc20, _erc20Owner, address(this), value);
             }
         }
     }
 
-    function _feeCheck(
-        bytes4 _method,
-        uint256 _value
-    ) internal view {
+    function _feeCheck(bytes4 _method, uint256 _value) internal view {
         uint256 _fee = _getFeeValue(_method);
         assembly {
             if iszero(eq(_value, _fee)) {
@@ -531,34 +443,24 @@ contract ERC1155Basic is
         }
     }
 
-    function _getPriceValue(
-        address _erc20Owner
-    ) internal view returns (uint256 value) {
-        value = (address(erc20) != address(0))
-            ? erc20.allowance(_erc20Owner, address(this))
-            : msg.value;
+    function _getPriceValue(address _erc20Owner) internal view returns (uint256 value) {
+        value = (address(erc20) != address(0)) ? erc20.allowance(_erc20Owner, address(this)) : msg.value;
     }
 
-    function _getFeeValue(
-        bytes4 _method
-    ) internal view returns (uint256 value) {
+    function _getFeeValue(bytes4 _method) internal view returns (uint256 value) {
         address _owner = owner;
         uint32 _size;
         assembly {
             _size := extcodesize(_owner)
         }
-        value = _size == 0
-            ? 0
-            : FeeOracle(owner).feeLookup(_method);
+        value = _size == 0 ? 0 : FeeOracle(owner).feeLookup(_method);
     }
 
     ////////////////////////////////////////////////////////////////
     //                     REQUIRED OVERRIDES                     //
     ////////////////////////////////////////////////////////////////
 
-    function supportsInterface(
-        bytes4 interfaceId
-    ) public pure virtual override(ERC2981) returns (bool) {
+    function supportsInterface(bytes4 interfaceId) public pure virtual override(ERC2981) returns (bool) {
         return
             // ERC165 Interface ID for ERC165
             interfaceId == 0x01ffc9a7 ||

@@ -20,23 +20,13 @@ library ERC1155BasicDeployer {
         uint256 _royalty,
         ERC20 _erc20
     ) public returns (bytes32 tokenSalt, address deployed) {
-        SplitterImpl splitter = SplitterImpl(
-            payable(_splitter)
-        );
+        SplitterImpl splitter = SplitterImpl(payable(_splitter));
         tokenSalt = keccak256(bytes(_tokenSalt));
         deployed = CREATE3.deploy(
             tokenSalt,
             abi.encodePacked(
                 type(ERC1155Basic).creationCode,
-                abi.encode(
-                    _uri,
-                    _price,
-                    _maxSupply,
-                    splitter,
-                    _royalty,
-                    _router,
-                    _erc20
-                )
+                abi.encode(_uri, _price, _maxSupply, splitter, _royalty, _router, _erc20)
             ),
             0
         );

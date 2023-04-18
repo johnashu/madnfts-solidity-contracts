@@ -5,10 +5,5 @@ module.exports = {
   providerOptions: {
     mnemonic: process.env.MNEMONIC,
   },
-  skipFiles: [
-    "test",
-    "contracts/lib/test",
-    "MADFactory1155.sol",
-    "MADFactory721.sol",
-  ],
+  skipFiles: ["test", "contracts/lib/test"],
 };

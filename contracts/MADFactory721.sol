@@ -2,26 +2,24 @@
 
 pragma solidity 0.8.16;
 
-import { MAD } from "./MAD.sol";
+import { MAD } from "contracts/MAD.sol";
 
-import { FactoryEventsAndErrors721, FactoryVerifier } from "./EventsAndErrors.sol";
+import { FactoryEventsAndErrors721, FactoryVerifier } from "contracts/EventsAndErrors.sol";
 
 import { 
 
     ERC721BasicDeployer
 
-} from "./lib/deployers/ERC721Deployer.sol";
+} from "contracts/lib/deployers/ERC721Deployer.sol";
 
-import { SplitterDeployer } from "./lib/deployers/SplitterDeployer.sol";
-
-import { Pausable } from "./lib/security/Pausable.sol";
-import { Owned } from "./lib/auth/Owned.sol";
-import { ReentrancyGuard } from "./lib/security/ReentrancyGuard.sol";
-import { DCPrevent } from "./lib/security/DCPrevent.sol";
-import { Types, SplitterImpl } from "./Types.sol";
-import { ERC20 } from "./lib/tokens/ERC20.sol";
-
-import { CREATE3, Bytes32AddressLib } from "./lib/utils/CREATE3.sol";
+import { SplitterDeployer } from "contracts/lib/deployers/SplitterDeployer.sol";
+import { Pausable } from "contracts/lib/security/Pausable.sol";
+import { Owned } from "contracts/lib/auth/Owned.sol";
+import { ReentrancyGuard } from "contracts/lib/security/ReentrancyGuard.sol";
+import { DCPrevent } from "contracts/lib/security/DCPrevent.sol";
+import { Types, SplitterImpl } from "contracts/Types.sol";
+import { ERC20 } from "contracts/lib/tokens/ERC20.sol";
+import { CREATE3, Bytes32AddressLib } from "contracts/lib/utils/CREATE3.sol";
 
 contract MADFactory721 is
     MAD,

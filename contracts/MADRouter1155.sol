@@ -2,26 +2,19 @@
 
 pragma solidity 0.8.16;
 
-import { MAD } from "./MAD.sol";
-import { RouterEvents, FactoryVerifier } from "./EventsAndErrors.sol";
+import { MAD } from "contracts/MAD.sol";
+import { RouterEvents, FactoryVerifier } from "contracts/EventsAndErrors.sol";
 
-import { ERC20 } from "./lib/tokens/ERC20.sol";
-import { ERC1155Basic } from "./lib/tokens/ERC1155/Impl/ERC1155Basic.sol";
+import { ERC20 } from "contracts/lib/tokens/ERC20.sol";
+import { ERC1155Basic } from "contracts/lib/tokens/ERC1155/Impl/ERC1155Basic.sol";
 
-import { SafeTransferLib } from "./lib/utils/SafeTransferLib.sol";
-import { ReentrancyGuard } from "./lib/security/ReentrancyGuard.sol";
-import { Pausable } from "./lib/security/Pausable.sol";
-import { Owned } from "./lib/auth/Owned.sol";
-import { FeeOracle } from "./lib/tokens/common/FeeOracle.sol";
+import { SafeTransferLib } from "contracts/lib/utils/SafeTransferLib.sol";
+import { ReentrancyGuard } from "contracts/lib/security/ReentrancyGuard.sol";
+import { Pausable } from "contracts/lib/security/Pausable.sol";
+import { Owned } from "contracts/lib/auth/Owned.sol";
+import { FeeOracle } from "contracts/lib/tokens/common/FeeOracle.sol";
 
-contract MADRouter1155 is
-    MAD,
-    RouterEvents,
-    Owned(msg.sender),
-    Pausable,
-    ReentrancyGuard,
-    FeeOracle
-{
+contract MADRouter1155 is MAD, RouterEvents, Owned(msg.sender), Pausable, ReentrancyGuard, FeeOracle {
     ////////////////////////////////////////////////////////////////
     //                           STORAGE                          //
     ////////////////////////////////////////////////////////////////
@@ -55,12 +48,7 @@ contract MADRouter1155 is
 
     /// @notice Contract name.
     /// @dev Function Sighash := 0x06fdde03
-    function name()
-        external
-        pure
-        override(MAD)
-        returns (string memory)
-    {
+    function name() external pure override(MAD) returns (string memory) {
         assembly {
             mstore(0x20, 0x20)
             mstore(0x46, 0x6726F75746572)
@@ -77,11 +65,7 @@ contract MADRouter1155 is
     /// @param _paymentTokenAddress erc20 token address | address(0).
     /// @param _recipient 721 factory address.
     // B.1 - Remove maxFeeMint &  maxFeeBurn from constructor
-    constructor(
-        FactoryVerifier _factory,
-        address _paymentTokenAddress,
-        address _recipient
-    ) {
+    constructor(FactoryVerifier _factory, address _paymentTokenAddress, address _recipient) {
         // B.3 BlockHat Audit
         feeMint = 0.25 ether;
 
@@ -98,9 +82,7 @@ contract MADRouter1155 is
 
     /// @dev Setter for public mint fee _recipient.
     /// @dev Function Sighash := ?
-    function setRecipient(
-        address _recipient
-    ) public onlyOwner {
+    function setRecipient(address _recipient) public onlyOwner {
         require(_recipient != address(0), "Invalid address");
 
         assembly {
@@ -113,9 +95,7 @@ contract MADRouter1155 is
     /// @notice Enables the contract's owner to change payment token address.
     /// @dev Function Signature := 0x6a326ab1
     /// @param _paymentTokenAddress erc20 token address | address(0).
-    function _setPaymentToken(
-        address _paymentTokenAddress
-    ) private {
+    function _setPaymentToken(address _paymentTokenAddress) private {
         erc20 = ERC20(_paymentTokenAddress);
         emit PaymentTokenUpdated(_paymentTokenAddress);
     }
@@ -126,18 +106,11 @@ contract MADRouter1155 is
     ///      Function Sighash := 0x4328bd00
     /// @param _token 1155 token address.
     /// @param _uri New URI string.
-    function setURI(
-        address _token,
-        string memory _uri
-    ) external nonReentrant whenNotPaused {
-        (bytes32 _colID, uint8 _tokenType) = _tokenRender(
-            _token
-        );
+    function setURI(address _token, string memory _uri) external nonReentrant whenNotPaused {
+        (bytes32 _colID, uint8 _tokenType) = _tokenRender(_token);
 
         // if (_tokenType == 1) {
-        _tokenType == 1
-            ? ERC1155Basic(_token).setURI(_uri)
-            : revert("INVALID_TYPE");
+        _tokenType == 1 ? ERC1155Basic(_token).setURI(_uri) : revert("INVALID_TYPE");
 
         emit BaseURI(_colID, _uri);
     }
@@ -148,14 +121,10 @@ contract MADRouter1155 is
     ///      by each tokens' setBaseURILock functions.
     ///      Function Sighash := ?
     /// @param _token 721 token address.
-    function setURILock(
-        address _token
-    ) external nonReentrant whenNotPaused {
+    function setURILock(address _token) external nonReentrant whenNotPaused {
         (, uint8 _tokenType) = _tokenRender(_token);
 
-        _tokenType == 1
-            ? ERC1155Basic(_token).setURILock()
-            : revert("INVALID_TYPE");
+        _tokenType == 1 ? ERC1155Basic(_token).setURILock() : revert("INVALID_TYPE");
     }
 
     /// @notice Global MintState setter/controller
@@ -178,13 +147,9 @@ contract MADRouter1155 is
         whenNotPaused
     {
         // require(_stateType < 3, "INVALID_TYPE");
-        (bytes32 _colID, uint8 _tokenType) = _tokenRender(
-            _token
-        );
+        (bytes32 _colID, uint8 _tokenType) = _tokenRender(_token);
 
-        _tokenType == 1
-            ? ERC1155Basic(_token).setPublicMintState(_state)
-            : revert("INVALID_TYPE");
+        _tokenType == 1 ? ERC1155Basic(_token).setPublicMintState(_state) : revert("INVALID_TYPE");
 
         emit PublicMintState(_colID, _tokenType, _state);
     }
@@ -208,12 +173,7 @@ contract MADRouter1155 is
         (, uint8 _tokenType) = _tokenRender(_token);
         if (_tokenType != 1) revert("INVALID_TYPE");
         _paymentCheck(0x40d097c3);
-        ERC1155Basic(_token).mintTo{ value: msg.value }(
-            _to,
-            _amount,
-            _balances,
-            msg.sender
-        );
+        ERC1155Basic(_token).mintTo{ value: msg.value }(_to, _amount, _balances, msg.sender);
     }
 
     /// @dev Function Sighash := 0x535f64e7
@@ -230,12 +190,7 @@ contract MADRouter1155 is
         (, uint8 _tokenType) = _tokenRender(_token);
         if (_tokenType != 1) revert("INVALID_TYPE");
         _paymentCheck(0x40d097c3);
-        ERC1155Basic(_token).mintBatchTo{ value: msg.value }(
-            _to,
-            _ids,
-            _balances,
-            msg.sender
-        );
+        ERC1155Basic(_token).mintBatchTo{ value: msg.value }(_to, _ids, _balances, msg.sender);
     }
 
     /// @notice Global token burn controller/single pusher for all token types.
@@ -254,12 +209,7 @@ contract MADRouter1155 is
         (, uint8 _tokenType) = _tokenRender(_token);
         _paymentCheck(0x44df8e70);
         _tokenType == 1
-            ? ERC1155Basic(_token).burn{ value: msg.value }(
-                to,
-                _ids,
-                _amount,
-                msg.sender
-            )
+            ? ERC1155Basic(_token).burn{ value: msg.value }(to, _ids, _amount, msg.sender)
             : revert("INVALID_TYPE");
     }
 
@@ -280,9 +230,7 @@ contract MADRouter1155 is
 
         _paymentCheck(0x44df8e70);
         _tokenType == 1
-            ? ERC1155Basic(_token).burnBatch{
-                value: msg.value
-            }(_from, _ids, _balances, msg.sender)
+            ? ERC1155Basic(_token).burnBatch{ value: msg.value }(_from, _ids, _balances, msg.sender)
             : revert("INVALID_TYPE");
     }
 
@@ -297,30 +245,17 @@ contract MADRouter1155 is
     /// @param _token 1155 token address.
     /// @param _erc20 ERC20 token address.
     // B.2 BlockHat Audit  -remove whenPaused
-    function withdraw(
-        address _token,
-        ERC20 _erc20
-    ) external nonReentrant {
-        (bytes32 _colID, uint8 _tokenType) = _tokenRender(
-            _token
-        );
+    function withdraw(address _token, ERC20 _erc20) external nonReentrant {
+        (bytes32 _colID, uint8 _tokenType) = _tokenRender(_token);
 
         if (_tokenType == 1) {
-            address(_erc20) != address(0) &&
-                _erc20.balanceOf(_token) != 0
-                ? ERC1155Basic(_token).withdrawERC20(
-                    _erc20,
-                    recipient
-                )
+            address(_erc20) != address(0) && _erc20.balanceOf(_token) != 0
+                ? ERC1155Basic(_token).withdrawERC20(_erc20, recipient)
                 : _token.balance != 0
                 ? ERC1155Basic(_token).withdraw(recipient)
                 : revert("NO_FUNDS");
 
-            emit TokenFundsWithdrawn(
-                _colID,
-                _tokenType,
-                msg.sender
-            );
+            emit TokenFundsWithdrawn(_colID, _tokenType, msg.sender);
         } else revert("INVALID_TYPE");
     }
 
@@ -331,14 +266,7 @@ contract MADRouter1155 is
     /// @notice Mint and burn fee lookup.
     /// @dev Function Sighash := 0xedc9e7a4
     /// @param sigHash MINSAFEMINT | MINBURN
-    function feeLookup(
-        bytes4 sigHash
-    )
-        external
-        view
-        override(FeeOracle)
-        returns (uint256 fee)
-    {
+    function feeLookup(bytes4 sigHash) external view override(FeeOracle) returns (uint256 fee) {
         assembly {
             for {
 
@@ -364,9 +292,7 @@ contract MADRouter1155 is
     ///      for valid token and approved user.
     ///      Function Sighash := 0xdbf62b2e
     /// @param _token 1155 token address.
-    function _tokenRender(
-        address _token
-    ) private view returns (bytes32 colID, uint8 tokenType) {
+    function _tokenRender(address _token) private view returns (bytes32 colID, uint8 tokenType) {
         colID = MADFactory1155.getColID(_token);
         MADFactory1155.creatorCheck(colID);
         tokenType = MADFactory1155.typeChecker(colID);
@@ -378,10 +304,7 @@ contract MADRouter1155 is
     /// @param sigHash MINSAFEMINT | MINBURN
     function _paymentCheck(bytes4 sigHash) internal {
         if (address(erc20) != address(0)) {
-            uint256 value = erc20.allowance(
-                msg.sender,
-                address(this)
-            );
+            uint256 value = erc20.allowance(msg.sender, address(this));
             uint256 _fee = FeeOracle(this).feeLookup(sigHash);
             assembly {
                 if iszero(eq(value, _fee)) {
@@ -389,12 +312,7 @@ contract MADRouter1155 is
                     revert(0x1c, 0x04)
                 }
             }
-            SafeTransferLib.safeTransferFrom(
-                erc20,
-                msg.sender,
-                address(this),
-                value
-            );
+            SafeTransferLib.safeTransferFrom(erc20, msg.sender, address(this), value);
         }
     }
 
@@ -407,14 +325,8 @@ contract MADRouter1155 is
     ///      Function Sighash := 0x0b78f9c0
     /// @param _feeMint New mint fee.
     /// @param _feeBurn New burn fee.
-    function setFees(
-        uint256 _feeMint,
-        uint256 _feeBurn
-    ) external onlyOwner {
-        require(
-            _feeMint <= maxFeeMint && _feeBurn <= maxFeeBurn,
-            "Invalid fee settings, beyond max"
-        );
+    function setFees(uint256 _feeMint, uint256 _feeBurn) external onlyOwner {
+        require(_feeMint <= maxFeeMint && _feeBurn <= maxFeeBurn, "Invalid fee settings, beyond max");
         assembly {
             sstore(feeBurn.slot, _feeBurn)
             sstore(feeMint.slot, _feeMint)

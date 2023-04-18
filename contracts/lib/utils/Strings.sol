@@ -8,9 +8,7 @@ pragma solidity 0.8.16;
 
 library Strings {
     /// @dev Converts a `uint256` to its ASCII `string` decimal representation.
-    function toString(
-        uint256 value
-    ) internal pure returns (string memory str) {
+    function toString(uint256 value) internal pure returns (string memory str) {
         assembly {
             // The maximum value of a uint256 contains 78 digits (1 byte per digit),
             // but we allocate 128 bytes to keep the free memory pointer 32-byte word aliged.

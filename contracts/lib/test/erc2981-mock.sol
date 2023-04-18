@@ -14,9 +14,7 @@ contract MockERC2981 is ERC2981, Owned(msg.sender) {
         setRoyaltyFee(fee);
     }
 
-    function setRoyaltyRecipient(
-        address recipient
-    ) public onlyOwner {
+    function setRoyaltyRecipient(address recipient) public onlyOwner {
         _royaltyRecipient = recipient;
 
         emit RoyaltyRecipientSet(_royaltyRecipient);

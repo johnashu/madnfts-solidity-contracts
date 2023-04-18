@@ -12,12 +12,7 @@ contract ERC721Holder is ERC721TokenReceiver {
     /// Accepts all token transfers.
     /// Make sure the contract is able to use its token with
     /// {IERC721-safeTransferFrom}, {IERC721-approve} or {IERC721-setApprovalForAll}.
-    function onERC721Received(
-        address,
-        address,
-        uint256,
-        bytes memory
-    ) public virtual override returns (bytes4) {
+    function onERC721Received(address, address, uint256, bytes memory) public virtual override returns (bytes4) {
         return this.onERC721Received.selector;
     }
 }

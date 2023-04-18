@@ -5,15 +5,11 @@ pragma solidity 0.8.16;
 /// @notice Library for converting between addresses and bytes32 values.
 /// @author Solmate (https://github.com/Rari-Capital/solmate/blob/main/src/utils/Bytes32AddressLib.sol)
 library Bytes32AddressLib {
-    function fromLast20Bytes(
-        bytes32 bytesValue
-    ) internal pure returns (address) {
+    function fromLast20Bytes(bytes32 bytesValue) internal pure returns (address) {
         return address(uint160(uint256(bytesValue)));
     }
 
-    function fillLast12Bytes(
-        address addressValue
-    ) internal pure returns (bytes32) {
+    function fillLast12Bytes(address addressValue) internal pure returns (bytes32) {
         return bytes32(bytes20(addressValue));
     }
 }
@@ -45,45 +41,27 @@ library CREATE3 {
     // 0x60       |  0x6018               | PUSH1 18         | 24 8                   //
     // 0xf3       |  0xf3                 | RETURN           |                        //
     //--------------------------------------------------------------------------------//
-    bytes internal constant PROXY_BYTECODE =
-        hex"67_36_3d_3d_37_36_3d_34_f0_3d_52_60_08_60_18_f3";
+    bytes internal constant PROXY_BYTECODE = hex"67_36_3d_3d_37_36_3d_34_f0_3d_52_60_08_60_18_f3";
 
-    bytes32 internal constant PROXY_BYTECODE_HASH =
-        keccak256(PROXY_BYTECODE);
+    bytes32 internal constant PROXY_BYTECODE_HASH = keccak256(PROXY_BYTECODE);
 
-    function deploy(
-        bytes32 salt,
-        bytes memory creationCode,
-        uint256 value
-    ) internal returns (address deployed) {
+    function deploy(bytes32 salt, bytes memory creationCode, uint256 value) internal returns (address deployed) {
         bytes memory proxyChildBytecode = PROXY_BYTECODE;
 
         address proxy;
         assembly {
             // Deploy a new contract with our pre-made bytecode via CREATE2.
             // We start 32 bytes into the code to avoid copying the byte length.
-            proxy := create2(
-                0,
-                add(proxyChildBytecode, 32),
-                mload(proxyChildBytecode),
-                salt
-            )
+            proxy := create2(0, add(proxyChildBytecode, 32), mload(proxyChildBytecode), salt)
         }
         require(proxy != address(0), "DEPLOYMENT_FAILED");
 
         deployed = getDeployed(salt);
-        (bool success, ) = proxy.call{ value: value }(
-            creationCode
-        );
-        require(
-            success && deployed.code.length != 0,
-            "INITIALIZATION_FAILED"
-        );
+        (bool success, ) = proxy.call{ value: value }(creationCode);
+        require(success && deployed.code.length != 0, "INITIALIZATION_FAILED");
     }
 
-    function getDeployed(
-        bytes32 salt
-    ) internal view returns (address) {
+    function getDeployed(bytes32 salt) internal view returns (address) {
         address proxy = keccak256(
             abi.encodePacked(
                 // Prefix:

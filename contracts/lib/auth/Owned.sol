@@ -10,10 +10,7 @@ abstract contract Owned {
                                  EVENTS
     //////////////////////////////////////////////////////////////*/
 
-    event OwnerUpdated(
-        address indexed user,
-        address indexed newOwner
-    );
+    event OwnerUpdated(address indexed user, address indexed newOwner);
 
     /*//////////////////////////////////////////////////////////////
                             OWNERSHIP STORAGE

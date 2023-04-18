@@ -23,7 +23,6 @@ import {
   dead,
   getOrderId721,
   madFixture721D,
-  swapTokens,
 } from "./../../utils/madFixtures";
 
 describe("MADMarketplace721 - ERC20 Payments", () => {

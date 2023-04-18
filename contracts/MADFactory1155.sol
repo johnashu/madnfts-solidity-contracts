@@ -2,28 +2,28 @@
 
 pragma solidity 0.8.16;
 
-import { MAD } from "./MAD.sol";
+import { MAD } from "contracts/MAD.sol";
 
 import { 
     FactoryEventsAndErrors1155, 
     FactoryVerifier 
-} from "./EventsAndErrors.sol";
+} from "contracts/EventsAndErrors.sol";
 
 import { 
     ERC1155BasicDeployer
 
-} from "./lib/deployers/ERC1155Deployer.sol";
+} from "contracts/lib/deployers/ERC1155Deployer.sol";
 
-import { SplitterDeployer } from "./lib/deployers/SplitterDeployer.sol";
+import { SplitterDeployer } from "contracts/lib/deployers/SplitterDeployer.sol";
 
-import { Pausable } from "./lib/security/Pausable.sol";
-import { Owned } from "./lib/auth/Owned.sol";
-import { ReentrancyGuard } from "./lib/security/ReentrancyGuard.sol";
-import { DCPrevent } from "./lib/security/DCPrevent.sol";
-import { Types, SplitterImpl } from "./Types.sol";
-import { ERC20 } from "./lib/tokens/ERC20.sol";
+import { Pausable } from "contracts/lib/security/Pausable.sol";
+import { Owned } from "contracts/lib/auth/Owned.sol";
+import { ReentrancyGuard } from "contracts/lib/security/ReentrancyGuard.sol";
+import { DCPrevent } from "contracts/lib/security/DCPrevent.sol";
+import { Types, SplitterImpl } from "contracts/Types.sol";
+import { ERC20 } from "contracts/lib/tokens/ERC20.sol";
 
-import { CREATE3, Bytes32AddressLib } from "./lib/utils/CREATE3.sol";
+import { CREATE3, Bytes32AddressLib } from "contracts/lib/utils/CREATE3.sol";
 
 // prettier-ignore
 contract MADFactory1155 is MAD,
