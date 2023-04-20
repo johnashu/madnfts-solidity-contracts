@@ -13,7 +13,8 @@ from constants import (
     OMIT_FOLDERS,
     STARS,
     IGNORED_DIR,
-    ERC_GLOB
+    ERC_GLOB,
+    EXCLUDED_DETECTORS
 )
 
 
@@ -93,6 +94,7 @@ def parse_results(results):
 
 
 def generate_header(items_count, contracts):
+    nl = "\n\n"
     header = (
         "# Slither Results\n\n"
         + issues_found.format(
@@ -101,6 +103,7 @@ def generate_header(items_count, contracts):
             items_count["Low"],
             items_count["Optimization"],
         )
+        + f"\n\n# Excluded Detectors\n \n {''.join([f'- *{x}*{nl}' for x in EXCLUDED_DETECTORS])}"
         + "\n## Smart Contracts Analysed With Issues: \n"
         + "".join([f"- [{x}]({REPO_CONTRACT_PATH}{x})\n" for x in contracts])
         + "\n## Smart Contracts Analysed With NO Issues: \n"

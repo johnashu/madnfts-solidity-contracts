@@ -11,6 +11,18 @@ The following number of issues were found, categorized by their severity:
 - Optimization: 26 issues
 
 
+
+# Excluded Detectors
+ 
+ - *pragma*
+
+- *solc-version*
+
+- *assembly*
+
+- *naming-convention*
+
+
 ## Smart Contracts Analysed With Issues: 
 - [contracts/Marketplace/MADMarketplaceBase.sol](https://github.com/johnashu/madnfts-solidity-contracts/tree/main/contracts/Marketplace/MADMarketplaceBase.sol)
 - [contracts/Router/MADRouterBase.sol](https://github.com/johnashu/madnfts-solidity-contracts/tree/main/contracts/Router/MADRouterBase.sol)
