@@ -1,18 +1,43 @@
 import json
 import os
+import glob
+import pathlib
 from templates import base_template, check_template, checks_header, issues_found
-from find_unlisted_contracts import find_unlisted_contracts
-from get_erc_checks import get_erc_checks
 from constants import (
-    repo_contract_path,
-    fn,
-    outFile,
-    impacts,
-    omit_keys,
-    omit_checks,
-    omit_folders,
-    stars,
+    REPO_CONTRACT_PATH,
+    FN,
+    OUTFILE,
+    IMPACTS,
+    OMIT_KEYS,
+    OMIT_CHECKS,
+    OMIT_FOLDERS,
+    STARS,
+    IGNORED_DIR,
+    ERC_GLOB
 )
+
+
+def find_unlisted_contracts(contracts_list: list, contracts_folder: str):
+    contracts_folder = pathlib.Path(contracts_folder)
+    unlisted_paths = []
+
+    for file_path in contracts_folder.rglob("*.sol"):
+        formatted_path = str(file_path).replace("\\", "/")
+
+        if formatted_path.startswith(IGNORED_DIR):
+            continue
+
+        if formatted_path not in contracts_list:
+            unlisted_paths.append(formatted_path)
+
+    return unlisted_paths
+
+def get_erc_checks() -> str:
+    check_str = ""
+    for check in glob.glob(ERC_GLOB):
+        with open(check, "r") as f:
+            check_str += f"\n{f.read()}"
+    return check_str
 
 
 def parse_results(results):
@@ -25,11 +50,11 @@ def parse_results(results):
         if contract_name not in contracts:
             contracts.append(contract_name)
         if (
-            check.get("impact") in impacts
+            check.get("impact") in IMPACTS
             and not check["elements"][0]["source_mapping"][
                 "filename_relative"
-            ].startswith(omit_folders)
-            and check["check"] not in omit_checks
+            ].startswith(OMIT_FOLDERS)
+            and check["check"] not in OMIT_CHECKS
         ):
             items_count[check["impact"]] += 1
 
@@ -40,7 +65,7 @@ def parse_results(results):
                         check["confidence"],
                         check["first_markdown_element"].split("#")[-1],
                         check["markdown"].replace(
-                            "contracts/", f"{repo_contract_path}contracts/"
+                            "contracts/", f"{REPO_CONTRACT_PATH}contracts/"
                         ),
                     )
                 )
@@ -51,17 +76,17 @@ def parse_results(results):
                         check["confidence"],
                         check["first_markdown_element"].split("#")[-1],
                         check["markdown"].replace(
-                            "contracts/", f"{repo_contract_path}contracts/"
+                            "contracts/", f"{REPO_CONTRACT_PATH}contracts/"
                         ),
                     )
                 ]
 
             print(
-                f"{stars}\n\n>>> {check['elements'][0]['source_mapping']['filename_relative']}\n"
+                f"{STARS}\n\n>>> {check['elements'][0]['source_mapping']['filename_relative']}\n"
             )
 
             for k, v in check.items():
-                if k not in omit_keys:
+                if k not in OMIT_KEYS:
                     print(f"{k}\n\t{v}\n")
 
     return markdown_data, items_count, contracts
@@ -77,11 +102,11 @@ def generate_header(items_count, contracts):
             items_count["Optimization"],
         )
         + "\n## Smart Contracts Analysed With Issues: \n"
-        + "".join([f"- [{x}]({repo_contract_path}{x})\n" for x in contracts])
+        + "".join([f"- [{x}]({REPO_CONTRACT_PATH}{x})\n" for x in contracts])
         + "\n## Smart Contracts Analysed With NO Issues: \n"
         + "".join(
             [
-                f"- [{x}]({repo_contract_path}{x})\n"
+                f"- [{x}]({REPO_CONTRACT_PATH}{x})\n"
                 for x in find_unlisted_contracts(contracts, "contracts")
             ]
         )
@@ -92,14 +117,9 @@ def generate_header(items_count, contracts):
 
 def write_output(header, markdown_data):
     done = []
-    with open(outFile, "w") as f:
+    with open(OUTFILE, "w") as f:
         f.write(header)
         for checkType, items in markdown_data.items():
-            # impact = items
-            # print(impact)
-            # if impact not in done:
-            #     f.write(f"\n\n# {impact} Items\n\n ---")
-            #     done.append(impact)
             summary = f"\n\n# {checkType}\n\n> Items Found: {len(items)}\n"
             for i, item in enumerate(items):
                 summary += f"\n_Item {i+1} / {len(items)}_\n{item}"
@@ -108,7 +128,7 @@ def write_output(header, markdown_data):
 
 
 def main():
-    with open(fn) as f:
+    with open(FN) as f:
         results = json.load(f)["results"]["detectors"]
 
     markdown_data, items_count, contracts = parse_results(results)

@@ -41,10 +41,13 @@ git push origin release/1.0
 ## Fetch the changes from the GitHub repository using the git fetch command with the remote repository name and branch name. For example:
 
 `git fetch origin`
-`git fetch github`
+
+`git fetch github release/1.0`
 
 `git fetch github main`
+
 `git fetch github release/1.0`
 
 `git push github release/1.0`
+
 `git push github main`
