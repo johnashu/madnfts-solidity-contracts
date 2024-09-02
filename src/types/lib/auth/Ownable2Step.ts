@@ -3,7 +3,6 @@
 /* eslint-disable */
 import type {
   BaseContract,
-  BigNumberish,
   BytesLike,
   FunctionFragment,
   Result,
@@ -21,9 +20,9 @@ import type {
   TypedLogDescription,
   TypedListener,
   TypedContractMethod,
-} from "../common";
+} from "../../common";
 
-export interface MADBaseInterface extends Interface {
+export interface Ownable2StepInterface extends Interface {
   getFunction(
     nameOrSignature:
       | "acceptOwnership"
@@ -34,13 +33,7 @@ export interface MADBaseInterface extends Interface {
   ): FunctionFragment;
 
   getEvent(
-    nameOrSignatureOrTopic:
-      | "FeesUpdated(uint256,uint256)"
-      | "FeesUpdated(uint256,uint256,address)"
-      | "OwnershipTransferStarted"
-      | "OwnershipTransferred"
-      | "PaymentTokenUpdated"
-      | "RecipientUpdated"
+    nameOrSignatureOrTopic: "OwnershipTransferStarted" | "OwnershipTransferred"
   ): EventFragment;
 
   encodeFunctionData(
@@ -80,41 +73,6 @@ export interface MADBaseInterface extends Interface {
   ): Result;
 }
 
-export namespace FeesUpdated_uint256_uint256_Event {
-  export type InputTuple = [feeVal2: BigNumberish, feeVal3: BigNumberish];
-  export type OutputTuple = [feeVal2: bigint, feeVal3: bigint];
-  export interface OutputObject {
-    feeVal2: bigint;
-    feeVal3: bigint;
-  }
-  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
-  export type Filter = TypedDeferredTopicFilter<Event>;
-  export type Log = TypedEventLog<Event>;
-  export type LogDescription = TypedLogDescription<Event>;
-}
-
-export namespace FeesUpdated_uint256_uint256_address_Event {
-  export type InputTuple = [
-    feeVal2: BigNumberish,
-    feeVal3: BigNumberish,
-    erc20Token: AddressLike
-  ];
-  export type OutputTuple = [
-    feeVal2: bigint,
-    feeVal3: bigint,
-    erc20Token: string
-  ];
-  export interface OutputObject {
-    feeVal2: bigint;
-    feeVal3: bigint;
-    erc20Token: string;
-  }
-  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
-  export type Filter = TypedDeferredTopicFilter<Event>;
-  export type Log = TypedEventLog<Event>;
-  export type LogDescription = TypedLogDescription<Event>;
-}
-
 export namespace OwnershipTransferStartedEvent {
   export type InputTuple = [previousOwner: AddressLike, newOwner: AddressLike];
   export type OutputTuple = [previousOwner: string, newOwner: string];
@@ -141,35 +99,11 @@ export namespace OwnershipTransferredEvent {
   export type LogDescription = TypedLogDescription<Event>;
 }
 
-export namespace PaymentTokenUpdatedEvent {
-  export type InputTuple = [newPaymentToken: AddressLike];
-  export type OutputTuple = [newPaymentToken: string];
-  export interface OutputObject {
-    newPaymentToken: string;
-  }
-  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
-  export type Filter = TypedDeferredTopicFilter<Event>;
-  export type Log = TypedEventLog<Event>;
-  export type LogDescription = TypedLogDescription<Event>;
-}
-
-export namespace RecipientUpdatedEvent {
-  export type InputTuple = [newRecipient: AddressLike];
-  export type OutputTuple = [newRecipient: string];
-  export interface OutputObject {
-    newRecipient: string;
-  }
-  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
-  export type Filter = TypedDeferredTopicFilter<Event>;
-  export type Log = TypedEventLog<Event>;
-  export type LogDescription = TypedLogDescription<Event>;
-}
-
-export interface MADBase extends BaseContract {
-  connect(runner?: ContractRunner | null): MADBase;
+export interface Ownable2Step extends BaseContract {
+  connect(runner?: ContractRunner | null): Ownable2Step;
   waitForDeployment(): Promise<this>;
 
-  interface: MADBaseInterface;
+  interface: Ownable2StepInterface;
 
   queryFilter<TCEvent extends TypedContractEvent>(
     event: TCEvent,
@@ -243,20 +177,6 @@ export interface MADBase extends BaseContract {
   ): TypedContractMethod<[newOwner: AddressLike], [void], "nonpayable">;
 
   getEvent(
-    key: "FeesUpdated(uint256,uint256)"
-  ): TypedContractEvent<
-    FeesUpdated_uint256_uint256_Event.InputTuple,
-    FeesUpdated_uint256_uint256_Event.OutputTuple,
-    FeesUpdated_uint256_uint256_Event.OutputObject
-  >;
-  getEvent(
-    key: "FeesUpdated(uint256,uint256,address)"
-  ): TypedContractEvent<
-    FeesUpdated_uint256_uint256_address_Event.InputTuple,
-    FeesUpdated_uint256_uint256_address_Event.OutputTuple,
-    FeesUpdated_uint256_uint256_address_Event.OutputObject
-  >;
-  getEvent(
     key: "OwnershipTransferStarted"
   ): TypedContractEvent<
     OwnershipTransferStartedEvent.InputTuple,
@@ -270,33 +190,8 @@ export interface MADBase extends BaseContract {
     OwnershipTransferredEvent.OutputTuple,
     OwnershipTransferredEvent.OutputObject
   >;
-  getEvent(
-    key: "PaymentTokenUpdated"
-  ): TypedContractEvent<
-    PaymentTokenUpdatedEvent.InputTuple,
-    PaymentTokenUpdatedEvent.OutputTuple,
-    PaymentTokenUpdatedEvent.OutputObject
-  >;
-  getEvent(
-    key: "RecipientUpdated"
-  ): TypedContractEvent<
-    RecipientUpdatedEvent.InputTuple,
-    RecipientUpdatedEvent.OutputTuple,
-    RecipientUpdatedEvent.OutputObject
-  >;
 
   filters: {
-    "FeesUpdated(uint256,uint256)": TypedContractEvent<
-      FeesUpdated_uint256_uint256_Event.InputTuple,
-      FeesUpdated_uint256_uint256_Event.OutputTuple,
-      FeesUpdated_uint256_uint256_Event.OutputObject
-    >;
-    "FeesUpdated(uint256,uint256,address)": TypedContractEvent<
-      FeesUpdated_uint256_uint256_address_Event.InputTuple,
-      FeesUpdated_uint256_uint256_address_Event.OutputTuple,
-      FeesUpdated_uint256_uint256_address_Event.OutputObject
-    >;
-
     "OwnershipTransferStarted(address,address)": TypedContractEvent<
       OwnershipTransferStartedEvent.InputTuple,
       OwnershipTransferStartedEvent.OutputTuple,
@@ -317,28 +212,6 @@ export interface MADBase extends BaseContract {
       OwnershipTransferredEvent.InputTuple,
       OwnershipTransferredEvent.OutputTuple,
       OwnershipTransferredEvent.OutputObject
-    >;
-
-    "PaymentTokenUpdated(address)": TypedContractEvent<
-      PaymentTokenUpdatedEvent.InputTuple,
-      PaymentTokenUpdatedEvent.OutputTuple,
-      PaymentTokenUpdatedEvent.OutputObject
-    >;
-    PaymentTokenUpdated: TypedContractEvent<
-      PaymentTokenUpdatedEvent.InputTuple,
-      PaymentTokenUpdatedEvent.OutputTuple,
-      PaymentTokenUpdatedEvent.OutputObject
-    >;
-
-    "RecipientUpdated(address)": TypedContractEvent<
-      RecipientUpdatedEvent.InputTuple,
-      RecipientUpdatedEvent.OutputTuple,
-      RecipientUpdatedEvent.OutputObject
-    >;
-    RecipientUpdated: TypedContractEvent<
-      RecipientUpdatedEvent.InputTuple,
-      RecipientUpdatedEvent.OutputTuple,
-      RecipientUpdatedEvent.OutputObject
     >;
   };
 }

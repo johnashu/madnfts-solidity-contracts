@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 
-pragma solidity 0.8.22;
+pragma solidity 0.8.23;
 
 /// @notice Simple ERC1155 implementation.
 /// @author Modified from Solady

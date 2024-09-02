@@ -12,7 +12,7 @@
 
 // msg.sender is the router AND tx.origin is the owner. This means the owner is
 // interacting with the contract through a trusted contract (the router).
-pragma solidity 0.8.22;
+pragma solidity 0.8.23;
 
 //prettier-ignore
 abstract contract TwoFactor {

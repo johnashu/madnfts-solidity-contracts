@@ -1,4 +1,4 @@
-pragma solidity 0.8.22;
+pragma solidity 0.8.23;
 
 import { MockERC20 } from "test/foundry/Base/Tokens/ERC20/deployMockERC20.sol";
 import { IFactory } from "test/foundry/Base/Factory/IFactory.sol";
