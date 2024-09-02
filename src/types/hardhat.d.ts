@@ -38,10 +38,6 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.Ownable2Step__factory>;
     getContractFactory(
-      name: "Owned",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.Owned__factory>;
-    getContractFactory(
       name: "TwoFactor",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.TwoFactor__factory>;
@@ -201,11 +197,6 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.Ownable2Step>;
     getContractAt(
-      name: "Owned",
-      address: string | ethers.Addressable,
-      signer?: ethers.Signer
-    ): Promise<Contracts.Owned>;
-    getContractAt(
       name: "TwoFactor",
       address: string | ethers.Addressable,
       signer?: ethers.Signer
@@ -391,10 +382,6 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.Ownable2Step>;
     deployContract(
-      name: "Owned",
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.Owned>;
-    deployContract(
       name: "TwoFactor",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.TwoFactor>;
@@ -553,11 +540,6 @@ declare module "hardhat/types/runtime" {
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.Ownable2Step>;
-    deployContract(
-      name: "Owned",
-      args: any[],
-      signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.Owned>;
     deployContract(
       name: "TwoFactor",
       args: any[],

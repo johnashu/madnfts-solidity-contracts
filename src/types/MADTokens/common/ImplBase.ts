@@ -27,6 +27,7 @@ export interface ImplBaseInterface extends Interface {
   getFunction(
     nameOrSignature:
       | "_royaltyFee"
+      | "_royaltyRecipient"
       | "baseURI"
       | "erc20"
       | "erc20PaymentsEnabled"
@@ -59,6 +60,10 @@ export interface ImplBaseInterface extends Interface {
 
   encodeFunctionData(
     functionFragment: "_royaltyFee",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "_royaltyRecipient",
     values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "baseURI", values?: undefined): string;
@@ -109,6 +114,10 @@ export interface ImplBaseInterface extends Interface {
 
   decodeFunctionResult(
     functionFragment: "_royaltyFee",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "_royaltyRecipient",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "baseURI", data: BytesLike): Result;
@@ -276,6 +285,8 @@ export interface ImplBase extends BaseContract {
 
   _royaltyFee: TypedContractMethod<[], [bigint], "view">;
 
+  _royaltyRecipient: TypedContractMethod<[], [string], "view">;
+
   baseURI: TypedContractMethod<[], [string], "view">;
 
   erc20: TypedContractMethod<[], [string], "view">;
@@ -339,6 +350,9 @@ export interface ImplBase extends BaseContract {
   getFunction(
     nameOrSignature: "_royaltyFee"
   ): TypedContractMethod<[], [bigint], "view">;
+  getFunction(
+    nameOrSignature: "_royaltyRecipient"
+  ): TypedContractMethod<[], [string], "view">;
   getFunction(
     nameOrSignature: "baseURI"
   ): TypedContractMethod<[], [string], "view">;

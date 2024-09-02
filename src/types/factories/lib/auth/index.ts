@@ -4,5 +4,4 @@
 export { FactoryVerifier__factory } from "./FactoryVerifier__factory";
 export { Ownable__factory } from "./Ownable__factory";
 export { Ownable2Step__factory } from "./Ownable2Step__factory";
-export { Owned__factory } from "./Owned__factory";
 export { TwoFactor__factory } from "./TwoFactor__factory";

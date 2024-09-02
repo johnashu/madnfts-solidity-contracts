@@ -22,11 +22,19 @@ import type {
 
 export interface ERC2981Interface extends Interface {
   getFunction(
-    nameOrSignature: "_royaltyFee" | "royaltyInfo" | "supportsInterface"
+    nameOrSignature:
+      | "_royaltyFee"
+      | "_royaltyRecipient"
+      | "royaltyInfo"
+      | "supportsInterface"
   ): FunctionFragment;
 
   encodeFunctionData(
     functionFragment: "_royaltyFee",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "_royaltyRecipient",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -40,6 +48,10 @@ export interface ERC2981Interface extends Interface {
 
   decodeFunctionResult(
     functionFragment: "_royaltyFee",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "_royaltyRecipient",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -97,6 +109,8 @@ export interface ERC2981 extends BaseContract {
 
   _royaltyFee: TypedContractMethod<[], [bigint], "view">;
 
+  _royaltyRecipient: TypedContractMethod<[], [string], "view">;
+
   royaltyInfo: TypedContractMethod<
     [arg0: BigNumberish, salePrice: BigNumberish],
     [[string, bigint] & { receiver: string; royaltyAmount: bigint }],
@@ -116,6 +130,9 @@ export interface ERC2981 extends BaseContract {
   getFunction(
     nameOrSignature: "_royaltyFee"
   ): TypedContractMethod<[], [bigint], "view">;
+  getFunction(
+    nameOrSignature: "_royaltyRecipient"
+  ): TypedContractMethod<[], [string], "view">;
   getFunction(
     nameOrSignature: "royaltyInfo"
   ): TypedContractMethod<

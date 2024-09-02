@@ -27,8 +27,6 @@ export type { Ownable } from "./lib/auth/Ownable";
 export { Ownable__factory } from "./factories/lib/auth/Ownable__factory";
 export type { Ownable2Step } from "./lib/auth/Ownable2Step";
 export { Ownable2Step__factory } from "./factories/lib/auth/Ownable2Step__factory";
-export type { Owned } from "./lib/auth/Owned";
-export { Owned__factory } from "./factories/lib/auth/Owned__factory";
 export type { TwoFactor } from "./lib/auth/TwoFactor";
 export { TwoFactor__factory } from "./factories/lib/auth/TwoFactor__factory";
 export type { ERC2981 } from "./lib/tokens/common/ERC2981";

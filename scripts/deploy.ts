@@ -35,13 +35,13 @@ const updateSettings = {
   setCollectionType1155: false,
   setFactoryFees: false,
   setRouterFees: false,
-  deployErc721: true,
-  deployErc1155: true,
+  deployErc721: false,
+  deployErc1155: false,
   createCollectionSplitter: false,
   createCollectionCollection: false,
-  verifyCollectionSplitter: false,
+  verifyCollectionSplitter: true,
   verifyErc721: false,
-  verifyErc1155: false,
+  verifyErc1155: true,
   verifyErc20: false,
 };
 
@@ -84,9 +84,12 @@ let deployedRouterAddress = ROUTER;
 let deployedErc20Address = ethers.ZeroAddress;
 let deployedErc721Address = ethers.ZeroAddress;
 let deployedErc1155Address = ethers.ZeroAddress;
-let deployedSplitterAddress = ethers.ZeroAddress;
-let deployedFactoryErc721Address = ethers.ZeroAddress;
-let deployedFactoryErc1155Address = ethers.ZeroAddress;
+let deployedSplitterAddress =
+  "0x7fff14609d138d8c309ac24932bd10459ba288b8"; //ethers.ZeroAddress;
+let deployedFactoryErc721Address =
+  "0xeCbAC7d854f059D275Dda4aA337051BCF68959B8"; //ethers.ZeroAddress;
+let deployedFactoryErc1155Address =
+  "0xeD5cbE4474C898693BdB33abff7dF669c829b0BE"; //ethers.ZeroAddress;
 
 const currentTimeHex = () => {
   let currentTimeHex = Date.now().toString(16);
@@ -232,7 +235,8 @@ const createCollectionSplitter = async factory => {
   );
   const receipt = await tx.wait(WAIT);
   const splitterEvent = receipt.events?.find(
-    event => event.event === "SplitterCreated",
+    (event: { event: string }) =>
+      event.event === "SplitterCreated",
   );
   if (!splitterEvent)
     throw new Error("SplitterCreated event not found");

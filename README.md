@@ -15,7 +15,13 @@
 ///     "~'    "~        ""     ^Y"   ^Y'      ""     MADNFTs © 2024.
 ```
 
-## Usage
+##
+
+BASE Mainnet
+
+Deployed Factory Address: 0x8BCE4F2f79f3d38B2e68766F67E01c887504aFd9
+Deployed Router Address: 0xD99e2bfa45dD76325cc789F43210e262c9Ce7197
+Deployed ERC20 Address:
 
 ## Sepolia BASE
 

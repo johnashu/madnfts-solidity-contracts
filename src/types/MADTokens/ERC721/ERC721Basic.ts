@@ -90,6 +90,7 @@ export interface ERC721BasicInterface extends Interface {
   getFunction(
     nameOrSignature:
       | "_royaltyFee"
+      | "_royaltyRecipient"
       | "approve"
       | "balanceOf"
       | "baseURI"
@@ -162,6 +163,10 @@ export interface ERC721BasicInterface extends Interface {
 
   encodeFunctionData(
     functionFragment: "_royaltyFee",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "_royaltyRecipient",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -325,6 +330,10 @@ export interface ERC721BasicInterface extends Interface {
 
   decodeFunctionResult(
     functionFragment: "_royaltyFee",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "_royaltyRecipient",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
@@ -722,6 +731,8 @@ export interface ERC721Basic extends BaseContract {
 
   _royaltyFee: TypedContractMethod<[], [bigint], "view">;
 
+  _royaltyRecipient: TypedContractMethod<[], [string], "view">;
+
   approve: TypedContractMethod<
     [account: AddressLike, id: BigNumberish],
     [void],
@@ -917,6 +928,9 @@ export interface ERC721Basic extends BaseContract {
   getFunction(
     nameOrSignature: "_royaltyFee"
   ): TypedContractMethod<[], [bigint], "view">;
+  getFunction(
+    nameOrSignature: "_royaltyRecipient"
+  ): TypedContractMethod<[], [string], "view">;
   getFunction(
     nameOrSignature: "approve"
   ): TypedContractMethod<
