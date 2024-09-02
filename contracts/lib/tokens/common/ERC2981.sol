@@ -14,7 +14,7 @@ abstract contract ERC2981 {
     uint256 public immutable _royaltyFee;
 
     /// @dev one global recipient for all royalties.
-    address internal _royaltyRecipient;
+    address public immutable _royaltyRecipient;
 
     constructor(uint256 royaltyFee, address royaltyRecipient) {
         _royaltyFee = royaltyFee;

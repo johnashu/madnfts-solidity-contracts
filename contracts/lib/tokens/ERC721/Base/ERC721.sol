@@ -10,21 +10,27 @@ pragma solidity ^0.8.4;
 /// (https://github.com/OpenZeppelin/openzeppelin-contracts/tree/master/contracts/token/ERC721/ERC721.sol)
 ///
 /// @dev Note:
-/// The ERC721 standard allows for self-approvals.
-/// For performance, this implementation WILL NOT revert for such actions.
-/// Please add any checks with overrides if desired.
-///
-/// For performance, methods are made payable where permitted by the ERC721
+/// - The ERC721 standard allows for self-approvals.
+///   For performance, this implementation WILL NOT revert for such actions.
+///   Please add any checks with overrides if desired.
+/// - For performance, methods are made payable where permitted by the ERC721
 /// standard.
+/// - The `safeTransfer` functions use the identity precompile (0x4)
+///   to copy memory internally.
 ///
-/// For performance, most of the code is manually duplicated and inlined.
-/// Overriding internal functions may not alter the functionality of external
-/// functions.
-/// Please check and override accordingly.
-///
-/// Please take care when overriding to never violate the ERC721 invariant:
-/// the balance of an owner must be always be equal to their number of ownership
+/// If you are overriding:
+/// - NEVER violate the ERC721 invariant:
+///   the balance of an owner MUST always be equal to their number of ownership
 /// slots.
+///   The transfer functions do not have an underflow guard for user token
+/// balances.
+/// - Make sure all variables written to storage are properly cleaned
+//    (e.g. the bool value for `isApprovedForAll` MUST be either 1 or 0 under
+// the hood).
+/// - Check that the overridden function is actually used in the function you
+/// want to
+///   change the behavior of. Much of the code has been manually inlined for
+/// performance.
 abstract contract ERC721 {
     /*´:°•.°+.*•´.*:˚.°*.˚•´.°:°•.°•.*•´.*:˚.°*.˚•´.°:°•.°+.*•´.*:*/
     /*                         CONSTANTS                          */
@@ -205,7 +211,7 @@ abstract contract ERC721 {
             mstore(0x00, id)
             mstore(0x1c, _ERC721_MASTER_SLOT_SEED)
             let ownershipSlot := add(id, add(id, keccak256(0x00, 0x20)))
-            if iszero(shr(96, shl(96, sload(ownershipSlot)))) {
+            if iszero(shl(96, sload(ownershipSlot))) {
                 mstore(0x00, 0xceea21b6) // `TokenDoesNotExist()`.
                 revert(0x1c, 0x04)
             }
@@ -261,13 +267,8 @@ abstract contract ERC721 {
             sstore(keccak256(0x0c, 0x30), isApproved)
             // Emit the {ApprovalForAll} event.
             mstore(0x00, isApproved)
-            log3(
-                0x00,
-                0x20,
-                _APPROVAL_FOR_ALL_EVENT_SIGNATURE,
-                caller(),
-                shr(96, shl(96, operator))
-            )
+            // forgefmt: disable-next-item
+            log3(0x00, 0x20, _APPROVAL_FOR_ALL_EVENT_SIGNATURE, caller(), shr(96, shl(96, operator)))
         }
     }
 
@@ -300,18 +301,11 @@ abstract contract ERC721 {
             let ownershipSlot := add(id, add(id, keccak256(0x00, 0x20)))
             let ownershipPacked := sload(ownershipSlot)
             let owner := and(bitmaskAddress, ownershipPacked)
-            // Revert if `from` is not the owner, or does not exist.
+            // Revert if the token does not exist, or if `from` is not the
+            // owner.
             if iszero(mul(owner, eq(owner, from))) {
-                if iszero(owner) {
-                    mstore(0x00, 0xceea21b6) // `TokenDoesNotExist()`.
-                    revert(0x1c, 0x04)
-                }
-                mstore(0x00, 0xa1148100) // `TransferFromIncorrectOwner()`.
-                revert(0x1c, 0x04)
-            }
-            // Revert if `to` is the zero address.
-            if iszero(to) {
-                mstore(0x00, 0xea553b34) // `TransferToZeroAddress()`.
+                // `TokenDoesNotExist()`, `TransferFromIncorrectOwner()`.
+                mstore(shl(2, iszero(owner)), 0xceea21b6a1148100)
                 revert(0x1c, 0x04)
             }
             // Load, check, and update the token approval.
@@ -341,14 +335,19 @@ abstract contract ERC721 {
                 mstore(0x00, to)
                 let toBalanceSlot := keccak256(0x0c, 0x1c)
                 let toBalanceSlotPacked := add(sload(toBalanceSlot), 1)
-                if iszero(and(toBalanceSlotPacked, _MAX_ACCOUNT_BALANCE)) {
-                    mstore(0x00, 0x01336cea) // `AccountBalanceOverflow()`.
+                // Revert if `to` is the zero address, or if the account balance
+                // overflows.
+                if iszero(
+                    mul(to, and(toBalanceSlotPacked, _MAX_ACCOUNT_BALANCE))
+                ) {
+                    // `TransferToZeroAddress()`, `AccountBalanceOverflow()`.
+                    mstore(shl(2, iszero(to)), 0xea553b3401336cea)
                     revert(0x1c, 0x04)
                 }
                 sstore(toBalanceSlot, toBalanceSlotPacked)
             }
             // Emit the {Transfer} event.
-            log4(0x00, 0x00, _TRANSFER_EVENT_SIGNATURE, from, to, id)
+            log4(codesize(), 0x00, _TRANSFER_EVENT_SIGNATURE, from, to, id)
         }
         _afterTokenTransfer(from, to, id);
     }
@@ -417,7 +416,10 @@ abstract contract ERC721 {
         assembly {
             mstore(0x00, id)
             mstore(0x1c, _ERC721_MASTER_SLOT_SEED)
-            result := shl(96, sload(add(id, add(id, keccak256(0x00, 0x20)))))
+            result :=
+                iszero(
+                    iszero(shl(96, sload(add(id, add(id, keccak256(0x00, 0x20))))))
+                )
         }
     }
 
@@ -535,11 +537,6 @@ abstract contract ERC721 {
         assembly {
             // Clear the upper 96 bits.
             to := shr(96, shl(96, to))
-            // Revert if `to` is the zero address.
-            if iszero(to) {
-                mstore(0x00, 0xea553b34) // `TransferToZeroAddress()`.
-                revert(0x1c, 0x04)
-            }
             // Load the ownership data.
             mstore(0x00, id)
             mstore(0x1c, _ERC721_MASTER_SLOT_SEED)
@@ -557,14 +554,64 @@ abstract contract ERC721 {
                 mstore(0x00, to)
                 let balanceSlot := keccak256(0x0c, 0x1c)
                 let balanceSlotPacked := add(sload(balanceSlot), 1)
-                if iszero(and(balanceSlotPacked, _MAX_ACCOUNT_BALANCE)) {
-                    mstore(0x00, 0x01336cea) // `AccountBalanceOverflow()`.
+                // Revert if `to` is the zero address, or if the account balance
+                // overflows.
+                if iszero(mul(to, and(balanceSlotPacked, _MAX_ACCOUNT_BALANCE)))
+                {
+                    // `TransferToZeroAddress()`, `AccountBalanceOverflow()`.
+                    mstore(shl(2, iszero(to)), 0xea553b3401336cea)
                     revert(0x1c, 0x04)
                 }
                 sstore(balanceSlot, balanceSlotPacked)
             }
             // Emit the {Transfer} event.
-            log4(0x00, 0x00, _TRANSFER_EVENT_SIGNATURE, 0, to, id)
+            log4(codesize(), 0x00, _TRANSFER_EVENT_SIGNATURE, 0, to, id)
+        }
+        _afterTokenTransfer(address(0), to, id);
+    }
+
+    /// @dev Mints token `id` to `to`, and updates the extra data for token `id`
+    /// to `value`.
+    /// Does NOT check if token `id` already exists (assumes `id` is
+    /// auto-incrementing).
+    ///
+    /// Requirements:
+    ///
+    /// - `to` cannot be the zero address.
+    ///
+    /// Emits a {Transfer} event.
+    function _mintAndSetExtraDataUnchecked(address to, uint256 id, uint96 value)
+        internal
+        virtual
+    {
+        _beforeTokenTransfer(address(0), to, id);
+        /// @solidity memory-safe-assembly
+        assembly {
+            // Clear the upper 96 bits.
+            to := shr(96, shl(96, to))
+            // Update with the owner and extra data.
+            mstore(0x00, id)
+            mstore(0x1c, _ERC721_MASTER_SLOT_SEED)
+            sstore(
+                add(id, add(id, keccak256(0x00, 0x20))), or(shl(160, value), to)
+            )
+            // Increment the balance of the owner.
+            {
+                mstore(0x00, to)
+                let balanceSlot := keccak256(0x0c, 0x1c)
+                let balanceSlotPacked := add(sload(balanceSlot), 1)
+                // Revert if `to` is the zero address, or if the account balance
+                // overflows.
+                if iszero(mul(to, and(balanceSlotPacked, _MAX_ACCOUNT_BALANCE)))
+                {
+                    // `TransferToZeroAddress()`, `AccountBalanceOverflow()`.
+                    mstore(shl(2, iszero(to)), 0xea553b3401336cea)
+                    revert(0x1c, 0x04)
+                }
+                sstore(balanceSlot, balanceSlotPacked)
+            }
+            // Emit the {Transfer} event.
+            log4(codesize(), 0x00, _TRANSFER_EVENT_SIGNATURE, 0, to, id)
         }
         _afterTokenTransfer(address(0), to, id);
     }
@@ -655,7 +702,7 @@ abstract contract ERC721 {
                 sstore(balanceSlot, sub(sload(balanceSlot), 1))
             }
             // Emit the {Transfer} event.
-            log4(0x00, 0x00, _TRANSFER_EVENT_SIGNATURE, owner, 0, id)
+            log4(codesize(), 0x00, _TRANSFER_EVENT_SIGNATURE, owner, 0, id)
         }
         _afterTokenTransfer(owner, address(0), id);
     }
@@ -731,7 +778,7 @@ abstract contract ERC721 {
     /// - If `by` is not the zero address, `by` must be the owner
     ///   or an approved operator for the token owner.
     ///
-    /// Emits a {Transfer} event.
+    /// Emits a {Approval} event.
     function _approve(address by, address account, uint256 id)
         internal
         virtual
@@ -763,7 +810,9 @@ abstract contract ERC721 {
             // Sets `account` as the approved account to manage `id`.
             sstore(add(1, ownershipSlot), account)
             // Emit the {Approval} event.
-            log4(0x00, 0x00, _APPROVAL_EVENT_SIGNATURE, owner, account, id)
+            log4(
+                codesize(), 0x00, _APPROVAL_EVENT_SIGNATURE, owner, account, id
+            )
         }
     }
 
@@ -830,18 +879,11 @@ abstract contract ERC721 {
             let ownershipSlot := add(id, add(id, keccak256(0x00, 0x20)))
             let ownershipPacked := sload(ownershipSlot)
             let owner := and(bitmaskAddress, ownershipPacked)
-            // Revert if `from` is not the owner, or does not exist.
+            // Revert if the token does not exist, or if `from` is not the
+            // owner.
             if iszero(mul(owner, eq(owner, from))) {
-                if iszero(owner) {
-                    mstore(0x00, 0xceea21b6) // `TokenDoesNotExist()`.
-                    revert(0x1c, 0x04)
-                }
-                mstore(0x00, 0xa1148100) // `TransferFromIncorrectOwner()`.
-                revert(0x1c, 0x04)
-            }
-            // Revert if `to` is the zero address.
-            if iszero(to) {
-                mstore(0x00, 0xea553b34) // `TransferToZeroAddress()`.
+                // `TokenDoesNotExist()`, `TransferFromIncorrectOwner()`.
+                mstore(shl(2, iszero(owner)), 0xceea21b6a1148100)
                 revert(0x1c, 0x04)
             }
             // Load, check, and update the token approval.
@@ -873,14 +915,19 @@ abstract contract ERC721 {
                 mstore(0x00, to)
                 let toBalanceSlot := keccak256(0x0c, 0x1c)
                 let toBalanceSlotPacked := add(sload(toBalanceSlot), 1)
-                if iszero(and(toBalanceSlotPacked, _MAX_ACCOUNT_BALANCE)) {
-                    mstore(0x00, 0x01336cea) // `AccountBalanceOverflow()`.
+                // Revert if `to` is the zero address, or if the account balance
+                // overflows.
+                if iszero(
+                    mul(to, and(toBalanceSlotPacked, _MAX_ACCOUNT_BALANCE))
+                ) {
+                    // `TransferToZeroAddress()`, `AccountBalanceOverflow()`.
+                    mstore(shl(2, iszero(to)), 0xea553b3401336cea)
                     revert(0x1c, 0x04)
                 }
                 sstore(toBalanceSlot, toBalanceSlotPacked)
             }
             // Emit the {Transfer} event.
-            log4(0x00, 0x00, _TRANSFER_EVENT_SIGNATURE, from, to, id)
+            log4(codesize(), 0x00, _TRANSFER_EVENT_SIGNATURE, from, to, id)
         }
         _afterTokenTransfer(from, to, id);
     }
@@ -1009,10 +1056,9 @@ abstract contract ERC721 {
             if iszero(call(gas(), to, 0, add(m, 0x1c), add(n, 0xa4), m, 0x20)) {
                 if returndatasize() {
                     // Bubble up the revert if the call reverts.
-                    returndatacopy(0x00, 0x00, returndatasize())
-                    revert(0x00, returndatasize())
+                    returndatacopy(m, 0x00, returndatasize())
+                    revert(m, returndatasize())
                 }
-                mstore(m, 0)
             }
             // Load the returndata and compare it.
             if iszero(eq(mload(m), shl(224, onERC721ReceivedSelector))) {

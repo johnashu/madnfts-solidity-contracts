@@ -31,7 +31,7 @@ contract ERC1155Basic is ERC1155, ImplBase, IERC1155EventsStructsAndErrors {
     mapping(uint256 id => uint256 maxSupply) public maxSupply;
 
     /// max that public can mint per address
-    uint256 public publicMintLimitDefault = 10;
+    uint256 constant publicMintLimitDefault = 10;
     mapping(uint256 id => mapping(address minter => uint256 minted)) public
         mintedByAddress;
 
