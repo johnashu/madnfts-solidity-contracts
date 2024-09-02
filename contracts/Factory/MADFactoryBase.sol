@@ -88,8 +88,13 @@ abstract contract MADFactoryBase is
         address collectionToken
     ) internal returns (address) {
         _isZeroAddr(router);
-        _limiter(params.tokenType, params.splitter);
-        _royaltyLocker(params.royalty);
+
+        // Only required if the collection has a splitter AND royalty share > 0
+        // Will revert if either of these are 0.
+        if (params.splitter != ADDRESS_ZERO && params.royalty > 0) {
+            _limiter(params.tokenType, params.splitter);
+            _royaltyLocker(params.royalty);
+        }
 
         address madFeeTokenAddress = params.madFeeTokenAddress;
         if (madFeeTokenAddress == ADDRESS_ZERO) {

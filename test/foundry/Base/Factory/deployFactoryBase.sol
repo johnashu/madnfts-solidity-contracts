@@ -101,11 +101,30 @@ contract DeployFactoryBase is Test, FactoryFactory, Helpers {
 
             // Probe they work..
 
+            /**
+             * @notice Verify deployment, an internal state-modifying contract
+             * function.
+             * @param newFactory The new factory (IFactory).
+             * @param _owner The owner address.
+             * @param _factorySignerAddress The factory signer address.
+             * @custom:signature verifyDeployment(address,address,address)
+             * @custom:selector 0x4ce98a1e
+             */
             // Test setRouter function
-            setAndCheckAddress(newFactory.setRouter, newFactory.router);
+            setAndCheckAddress(
+                newFactory.setRouter,
+                newFactory.acceptOwnership,
+                newFactory.router,
+                false
+            );
 
             // Test setOwner function
-            setAndCheckAddress(newFactory.setOwner, newFactory.owner);
+            setAndCheckAddress(
+                newFactory.transferOwnership,
+                newFactory.acceptOwnership,
+                newFactory.owner,
+                true
+            );
 
             vm.stopPrank();
         } else {
@@ -123,7 +142,7 @@ contract DeployFactoryBase is Test, FactoryFactory, Helpers {
         // emit log_named_address("factoryOwner", _owner);
 
         vm.startPrank(makeAddr("NotOwner"));
-        vm.expectRevert(0x1648fd01); // error NotAuthorised();
+        vm.expectRevert(); // error OwnableUnauthorizedAccount();
         _factory.addCollectionType(collectionType, _tokenType);
         vm.stopPrank();
 
@@ -144,7 +163,7 @@ contract DeployFactoryBase is Test, FactoryFactory, Helpers {
         // Set Router
         // emit log_named_address("factoryRouterAddress", _routerAddress);
 
-        vm.expectRevert(0x1648fd01); // error NotAuthorised();
+        vm.expectRevert(); // error OwnableUnauthorizedAccount();
         _factory.setRouter(address(0));
 
         vm.prank(_owner);

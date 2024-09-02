@@ -6,8 +6,10 @@ import { Enums } from "test/foundry/utils/enums.sol";
 
 abstract contract AddressesHelp is Test, Enums {
     function setAndCheckAddress(
-        function(address) external setAddressFunc,
-        function() view external returns (address) expectedAddressFunction
+        function(address) external setTransferOwnershipFunc,
+        function() external acceptOwnershipFunc,
+        function() view external returns (address) expectedAddressFunction,
+        bool is2Step
     ) internal {
         // Cache current address to reset at the end.
         address originalAddress = expectedAddressFunction();
@@ -17,11 +19,15 @@ abstract contract AddressesHelp is Test, Enums {
 
         // Attempt to set the address to address(0) and expect
         // the transaction to revert.
-        vm.expectRevert(0xd92e233d); //  error ZeroAddress();
-        setAddressFunc(address(0));
+        vm.expectRevert(); //  error OwnableInvalidOwner();
+        setTransferOwnershipFunc(address(0));
 
         // Set the address using the provided function
-        setAddressFunc(newAddress);
+        setTransferOwnershipFunc(newAddress);
+        if (is2Step) {
+            vm.startPrank(newAddress);
+            acceptOwnershipFunc();
+        }
 
         // Check that the address is set correctly
         assertTrue(
@@ -38,10 +44,15 @@ abstract contract AddressesHelp is Test, Enums {
             ) {
                 vm.stopPrank();
                 vm.prank(newAddress);
-                setAddressFunc(originalAddress);
-                vm.startPrank(originalAddress);
+                setTransferOwnershipFunc(originalAddress);
+                if (is2Step) {
+                    vm.prank(originalAddress);
+                    acceptOwnershipFunc();
+                }
             } else {
-                setAddressFunc(originalAddress);
+                setTransferOwnershipFunc(originalAddress);
+                vm.prank(originalAddress);
+                acceptOwnershipFunc();
             }
 
             // Check that the address is reset correctly

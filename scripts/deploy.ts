@@ -28,21 +28,21 @@ const WAIT = 5; // 5 confirmations to verify
 const updateSettings = {
   deployErcToken: false,
   deployFactory: false,
-  deployRouter: true,
-  setRouterAddress: true,
-  setFactoryAddress: true,
+  deployRouter: false,
+  setRouterAddress: false,
+  setFactoryAddress: false,
   setCollectionType721: false,
   setCollectionType1155: false,
   setFactoryFees: false,
-  setRouterFees: true,
-  deployErc721: false,
-  deployErc1155: false,
+  setRouterFees: false,
+  deployErc721: true,
+  deployErc1155: true,
   createCollectionSplitter: false,
   createCollectionCollection: false,
   verifyCollectionSplitter: false,
   verifyErc721: false,
   verifyErc1155: false,
-  verifyErc20: true,
+  verifyErc20: false,
 };
 
 const {
@@ -107,20 +107,6 @@ type CollectionArgsStruct = {
   _owner: AddressLike;
 };
 
-const mockArgs: CollectionArgsStruct = {
-  _name: "Verify Me Please",
-  _symbol: "VMP",
-  _baseURI:
-    "https://json.madnfts.io/0xce48d9d9b6d2bd198453fd68de5ddbea502cf636/",
-  _price: ethers.parseEther("0"),
-  _maxSupply: 1,
-  _splitter: deployedSplitterAddress as AddressLike,
-  _royaltyPercentage: 600, // 10%
-  _router: deployedRouterAddress as AddressLike,
-  _erc20: ethers.ZeroAddress, //deployedErc20Address as AddressLike,
-  _owner: deployerAddress as AddressLike,
-};
-
 type CreateCollectionParamsStruct = {
   madFeeTokenAddress: AddressLike;
   tokenType: BigNumberish;
@@ -133,18 +119,30 @@ type CreateCollectionParamsStruct = {
   splitter: AddressLike;
   royalty: BigNumberish;
 };
-
 const mockCollectionParams: CreateCollectionParamsStruct = {
+  collectionName: "Yoghurt No Images",
+  collectionSymbol: "YNI",
   madFeeTokenAddress: ethers.ZeroAddress,
   tokenType: 1, // Assuming token type as 1 for the mock
   tokenSalt: currentTimeHex() as BytesLike,
-  collectionName: "Mock Collection",
-  collectionSymbol: "MCK",
   price: ethers.parseEther("0.001"),
   maxSupply: 10000,
   uri: "https://mock-collection-params-uri.com/",
-  splitter: deployedSplitterAddress,
+  splitter: deployedSplitterAddress as AddressLike,
   royalty: 1000, // 10%
+};
+
+const mockArgs: CollectionArgsStruct = {
+  _name: mockCollectionParams.collectionName,
+  _symbol: mockCollectionParams.collectionSymbol,
+  _baseURI: mockCollectionParams.uri,
+  _price: mockCollectionParams.price,
+  _maxSupply: mockCollectionParams.maxSupply,
+  _splitter: mockCollectionParams.splitter,
+  _royaltyPercentage: mockCollectionParams.royalty,
+  _router: deployedRouterAddress as AddressLike,
+  _erc20: ethers.ZeroAddress, //deployedErc20Address as AddressLike,
+  _owner: deployerAddress as AddressLike,
 };
 
 type CreateSplitterParamsStruct = {

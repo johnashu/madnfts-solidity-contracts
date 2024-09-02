@@ -91,4 +91,7 @@ interface IRouter {
 
     function burn(address collection, uint128[] memory _ids, address erc20Token)
         external;
+
+    function transferOwnership(address newOwner) external;
+    function acceptOwnership() external;
 }

@@ -130,4 +130,7 @@ interface IFactory {
         external
         view
         returns (Fee memory);
+
+    function transferOwnership(address newOwner) external;
+    function acceptOwnership() external;
 }
