@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity 0.8.22;
+pragma solidity 0.8.23;
 
 import { MADFactory } from "contracts/Factory/MADFactory.sol";
 import { Enums } from "test/foundry/utils/enums.sol";

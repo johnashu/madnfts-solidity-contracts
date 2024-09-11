@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 
-pragma solidity 0.8.22;
+pragma solidity 0.8.23;
 
 import { MADBase } from "contracts/Shared/MADBase.sol";
 import {
@@ -88,8 +88,13 @@ abstract contract MADFactoryBase is
         address collectionToken
     ) internal returns (address) {
         _isZeroAddr(router);
-        _limiter(params.tokenType, params.splitter);
-        _royaltyLocker(params.royalty);
+
+        // Only required if the collection has a splitter AND royalty share > 0
+        // Will revert if either of these are 0.
+        if (params.splitter != ADDRESS_ZERO && params.royalty > 0) {
+            _limiter(params.tokenType, params.splitter);
+            _royaltyLocker(params.royalty);
+        }
 
         address madFeeTokenAddress = params.madFeeTokenAddress;
         if (madFeeTokenAddress == ADDRESS_ZERO) {

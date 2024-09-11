@@ -49,24 +49,24 @@ const DEFAULT_MNEMONIC =
 const chains: Array<NetworkUserConfig> = [
   {
     chainId: 8453, //base
-    url: 'https://mainnet.base.org',
+    url: "https://mainnet.base.org",
     gasPrice: 1000000000,
     accounts: PK
       ? [PK]
       : {
-        mnemonic: MNEMONIC || DEFAULT_MNEMONIC,
-      }
+          mnemonic: MNEMONIC || DEFAULT_MNEMONIC,
+        },
   },
   // for testnet
   {
     chainId: 84532, //baseSepolia
-    url: 'https://sepolia.base.org',
+    url: "https://sepolia.base.org",
     gasPrice: 1000000000,
     accounts: PK
       ? [PK]
       : {
-        mnemonic: MNEMONIC || DEFAULT_MNEMONIC,
-      }
+          mnemonic: MNEMONIC || DEFAULT_MNEMONIC,
+        },
   },
   {
     chainId: 1666600000, // harmony
@@ -74,8 +74,8 @@ const chains: Array<NetworkUserConfig> = [
     accounts: PK
       ? [PK]
       : {
-        mnemonic: MNEMONIC || DEFAULT_MNEMONIC,
-      }
+          mnemonic: MNEMONIC || DEFAULT_MNEMONIC,
+        },
   },
   {
     chainId: 1666900000, // harmonyDevnet
@@ -83,8 +83,8 @@ const chains: Array<NetworkUserConfig> = [
     accounts: PK
       ? [PK]
       : {
-        mnemonic: MNEMONIC || DEFAULT_MNEMONIC,
-      },
+          mnemonic: MNEMONIC || DEFAULT_MNEMONIC,
+        },
   },
   {
     chainId: 137, // Polygon
@@ -92,8 +92,8 @@ const chains: Array<NetworkUserConfig> = [
     accounts: PK
       ? [PK]
       : {
-        mnemonic: MNEMONIC || DEFAULT_MNEMONIC,
-      },
+          mnemonic: MNEMONIC || DEFAULT_MNEMONIC,
+        },
   },
   {
     chainId: 43970, // SERV
@@ -101,8 +101,8 @@ const chains: Array<NetworkUserConfig> = [
     accounts: PK
       ? [PK]
       : {
-        mnemonic: MNEMONIC || DEFAULT_MNEMONIC,
-      },
+          mnemonic: MNEMONIC || DEFAULT_MNEMONIC,
+        },
   },
   {
     chainId: 1564830818, // skale
@@ -110,8 +110,8 @@ const chains: Array<NetworkUserConfig> = [
     accounts: PK
       ? [PK]
       : {
-        mnemonic: MNEMONIC || DEFAULT_MNEMONIC,
-      },
+          mnemonic: MNEMONIC || DEFAULT_MNEMONIC,
+        },
   },
   {
     chainId: 344106930, // skaleDevnet
@@ -119,8 +119,8 @@ const chains: Array<NetworkUserConfig> = [
     accounts: PK
       ? [PK]
       : {
-        mnemonic: MNEMONIC || DEFAULT_MNEMONIC,
-      },
+          mnemonic: MNEMONIC || DEFAULT_MNEMONIC,
+        },
   },
   {
     chainId: 1351057110, // skale CHAOS
@@ -128,8 +128,8 @@ const chains: Array<NetworkUserConfig> = [
     accounts: PK
       ? [PK]
       : {
-        mnemonic: MNEMONIC || DEFAULT_MNEMONIC,
-      },
+          mnemonic: MNEMONIC || DEFAULT_MNEMONIC,
+        },
   },
   {
     chainId: 5, // goerli
@@ -137,20 +137,20 @@ const chains: Array<NetworkUserConfig> = [
     accounts: PK
       ? [PK]
       : {
-        mnemonic: MNEMONIC || DEFAULT_MNEMONIC,
-      },
+          mnemonic: MNEMONIC || DEFAULT_MNEMONIC,
+        },
   },
   {
-
     chainId: 11155111, // sepolia
     // url: "https://sepolia.infura.io/v3/" + INFURA_API_KEY,
 
-    url: "https://eth-sepolia.g.alchemy.com/v2/" + ALCHEMY_KEY,
+    url:
+      "https://eth-sepolia.g.alchemy.com/v2/" + ALCHEMY_KEY,
     accounts: PK
       ? [PK]
       : {
-        mnemonic: MNEMONIC || DEFAULT_MNEMONIC,
-      },
+          mnemonic: MNEMONIC || DEFAULT_MNEMONIC,
+        },
   },
   {
     chainId: 296, // Hedera testnet
@@ -158,11 +158,11 @@ const chains: Array<NetworkUserConfig> = [
     accounts: PK
       ? [PK]
       : {
-        mnemonic: MNEMONIC || DEFAULT_MNEMONIC,
-      },
+          mnemonic: MNEMONIC || DEFAULT_MNEMONIC,
+        },
     timeout: 200000,
 
-    allowUnlimitedContractSize: true
+    allowUnlimitedContractSize: true,
   },
   {
     chainId: 1337, // ganache
@@ -170,8 +170,8 @@ const chains: Array<NetworkUserConfig> = [
     accounts: PK
       ? [PK]
       : {
-        mnemonic: MNEMONIC || DEFAULT_MNEMONIC,
-      },
+          mnemonic: MNEMONIC || DEFAULT_MNEMONIC,
+        },
   },
 ];
 
@@ -190,22 +190,21 @@ const config: HardhatUserConfig = {
       baseSepolia: ETHERSCAN_API_KEY,
     },
     customChains: [
-
       {
         network: "base",
         chainId: 8453,
         urls: {
           apiURL: "https://api.basescan.org/api",
-          browserURL: "https://basescan.org"
-        }
+          browserURL: "https://basescan.org",
+        },
       },
       {
         network: "baseSepolia",
         chainId: 84532,
         urls: {
           apiURL: "https://api-sepolia.basescan.org/api",
-          browserURL: "https://sepolia.basescan.org"
-        }
+          browserURL: "https://sepolia.basescan.org",
+        },
       },
       {
         network: "harmonyDevnet",
@@ -221,7 +220,8 @@ const config: HardhatUserConfig = {
         chainId: 43970,
         urls: {
           apiURL: "https://rpc-testnet.serv.services",
-          browserURL: "https://tserv-explorer.tryethernal.com/",
+          browserURL:
+            "https://tserv-explorer.tryethernal.com/",
         },
       },
       {
@@ -289,7 +289,7 @@ const config: HardhatUserConfig = {
   //   },
   // },
   solidity: {
-    version: "0.8.22",
+    version: "0.8.23",
     settings: {
       viaIR: true,
       evmVersion: "shanghai",

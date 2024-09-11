@@ -35,6 +35,7 @@ export declare namespace FeeHandler {
 export interface MADRouterBaseInterface extends Interface {
   getFunction(
     nameOrSignature:
+      | "acceptOwnership"
       | "feeBurn"
       | "feeBurnErc20"
       | "feeMint"
@@ -43,12 +44,14 @@ export interface MADRouterBaseInterface extends Interface {
       | "madFactory"
       | "name"
       | "owner"
+      | "pendingOwner"
       | "recipient"
+      | "renounceOwnership"
       | "setFactory"
       | "setFees(uint256,uint256)"
       | "setFees(uint256,uint256,address)"
-      | "setOwner"
       | "setRecipient"
+      | "transferOwnership"
   ): FunctionFragment;
 
   getEvent(
@@ -57,13 +60,18 @@ export interface MADRouterBaseInterface extends Interface {
       | "FactoryUpdated"
       | "FeesUpdated(uint256,uint256)"
       | "FeesUpdated(uint256,uint256,address)"
-      | "OwnerUpdated"
+      | "OwnershipTransferStarted"
+      | "OwnershipTransferred"
       | "PaymentTokenUpdated"
       | "PublicMintState"
       | "RecipientUpdated"
       | "TokenFundsWithdrawn"
   ): EventFragment;
 
+  encodeFunctionData(
+    functionFragment: "acceptOwnership",
+    values?: undefined
+  ): string;
   encodeFunctionData(functionFragment: "feeBurn", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "feeBurnErc20",
@@ -84,7 +92,15 @@ export interface MADRouterBaseInterface extends Interface {
   ): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "pendingOwner",
+    values?: undefined
+  ): string;
   encodeFunctionData(functionFragment: "recipient", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "renounceOwnership",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "setFactory",
     values: [AddressLike]
@@ -98,14 +114,18 @@ export interface MADRouterBaseInterface extends Interface {
     values: [BigNumberish, BigNumberish, AddressLike]
   ): string;
   encodeFunctionData(
-    functionFragment: "setOwner",
-    values: [AddressLike]
-  ): string;
-  encodeFunctionData(
     functionFragment: "setRecipient",
     values: [AddressLike]
   ): string;
+  encodeFunctionData(
+    functionFragment: "transferOwnership",
+    values: [AddressLike]
+  ): string;
 
+  decodeFunctionResult(
+    functionFragment: "acceptOwnership",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "feeBurn", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "feeBurnErc20",
@@ -123,7 +143,15 @@ export interface MADRouterBaseInterface extends Interface {
   decodeFunctionResult(functionFragment: "madFactory", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "pendingOwner",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "recipient", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "renounceOwnership",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "setFactory", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "setFees(uint256,uint256)",
@@ -133,9 +161,12 @@ export interface MADRouterBaseInterface extends Interface {
     functionFragment: "setFees(uint256,uint256,address)",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "setOwner", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "setRecipient",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "transferOwnership",
     data: BytesLike
   ): Result;
 }
@@ -200,11 +231,24 @@ export namespace FeesUpdated_uint256_uint256_address_Event {
   export type LogDescription = TypedLogDescription<Event>;
 }
 
-export namespace OwnerUpdatedEvent {
-  export type InputTuple = [user: AddressLike, newOwner: AddressLike];
-  export type OutputTuple = [user: string, newOwner: string];
+export namespace OwnershipTransferStartedEvent {
+  export type InputTuple = [previousOwner: AddressLike, newOwner: AddressLike];
+  export type OutputTuple = [previousOwner: string, newOwner: string];
   export interface OutputObject {
-    user: string;
+    previousOwner: string;
+    newOwner: string;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace OwnershipTransferredEvent {
+  export type InputTuple = [previousOwner: AddressLike, newOwner: AddressLike];
+  export type OutputTuple = [previousOwner: string, newOwner: string];
+  export interface OutputObject {
+    previousOwner: string;
     newOwner: string;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
@@ -316,6 +360,8 @@ export interface MADRouterBase extends BaseContract {
     event?: TCEvent
   ): Promise<this>;
 
+  acceptOwnership: TypedContractMethod<[], [void], "nonpayable">;
+
   feeBurn: TypedContractMethod<[], [bigint], "view">;
 
   feeBurnErc20: TypedContractMethod<
@@ -348,7 +394,11 @@ export interface MADRouterBase extends BaseContract {
 
   owner: TypedContractMethod<[], [string], "view">;
 
+  pendingOwner: TypedContractMethod<[], [string], "view">;
+
   recipient: TypedContractMethod<[], [string], "view">;
+
+  renounceOwnership: TypedContractMethod<[], [void], "nonpayable">;
 
   setFactory: TypedContractMethod<
     [_factory: AddressLike],
@@ -372,10 +422,14 @@ export interface MADRouterBase extends BaseContract {
     "nonpayable"
   >;
 
-  setOwner: TypedContractMethod<[newOwner: AddressLike], [void], "nonpayable">;
-
   setRecipient: TypedContractMethod<
     [_recipient: AddressLike],
+    [void],
+    "nonpayable"
+  >;
+
+  transferOwnership: TypedContractMethod<
+    [newOwner: AddressLike],
     [void],
     "nonpayable"
   >;
@@ -384,6 +438,9 @@ export interface MADRouterBase extends BaseContract {
     key: string | FunctionFragment
   ): T;
 
+  getFunction(
+    nameOrSignature: "acceptOwnership"
+  ): TypedContractMethod<[], [void], "nonpayable">;
   getFunction(
     nameOrSignature: "feeBurn"
   ): TypedContractMethod<[], [bigint], "view">;
@@ -425,8 +482,14 @@ export interface MADRouterBase extends BaseContract {
     nameOrSignature: "owner"
   ): TypedContractMethod<[], [string], "view">;
   getFunction(
+    nameOrSignature: "pendingOwner"
+  ): TypedContractMethod<[], [string], "view">;
+  getFunction(
     nameOrSignature: "recipient"
   ): TypedContractMethod<[], [string], "view">;
+  getFunction(
+    nameOrSignature: "renounceOwnership"
+  ): TypedContractMethod<[], [void], "nonpayable">;
   getFunction(
     nameOrSignature: "setFactory"
   ): TypedContractMethod<[_factory: AddressLike], [void], "nonpayable">;
@@ -449,11 +512,11 @@ export interface MADRouterBase extends BaseContract {
     "nonpayable"
   >;
   getFunction(
-    nameOrSignature: "setOwner"
-  ): TypedContractMethod<[newOwner: AddressLike], [void], "nonpayable">;
-  getFunction(
     nameOrSignature: "setRecipient"
   ): TypedContractMethod<[_recipient: AddressLike], [void], "nonpayable">;
+  getFunction(
+    nameOrSignature: "transferOwnership"
+  ): TypedContractMethod<[newOwner: AddressLike], [void], "nonpayable">;
 
   getEvent(
     key: "BaseURISet"
@@ -484,11 +547,18 @@ export interface MADRouterBase extends BaseContract {
     FeesUpdated_uint256_uint256_address_Event.OutputObject
   >;
   getEvent(
-    key: "OwnerUpdated"
+    key: "OwnershipTransferStarted"
   ): TypedContractEvent<
-    OwnerUpdatedEvent.InputTuple,
-    OwnerUpdatedEvent.OutputTuple,
-    OwnerUpdatedEvent.OutputObject
+    OwnershipTransferStartedEvent.InputTuple,
+    OwnershipTransferStartedEvent.OutputTuple,
+    OwnershipTransferStartedEvent.OutputObject
+  >;
+  getEvent(
+    key: "OwnershipTransferred"
+  ): TypedContractEvent<
+    OwnershipTransferredEvent.InputTuple,
+    OwnershipTransferredEvent.OutputTuple,
+    OwnershipTransferredEvent.OutputObject
   >;
   getEvent(
     key: "PaymentTokenUpdated"
@@ -553,15 +623,26 @@ export interface MADRouterBase extends BaseContract {
       FeesUpdated_uint256_uint256_address_Event.OutputObject
     >;
 
-    "OwnerUpdated(address,address)": TypedContractEvent<
-      OwnerUpdatedEvent.InputTuple,
-      OwnerUpdatedEvent.OutputTuple,
-      OwnerUpdatedEvent.OutputObject
+    "OwnershipTransferStarted(address,address)": TypedContractEvent<
+      OwnershipTransferStartedEvent.InputTuple,
+      OwnershipTransferStartedEvent.OutputTuple,
+      OwnershipTransferStartedEvent.OutputObject
     >;
-    OwnerUpdated: TypedContractEvent<
-      OwnerUpdatedEvent.InputTuple,
-      OwnerUpdatedEvent.OutputTuple,
-      OwnerUpdatedEvent.OutputObject
+    OwnershipTransferStarted: TypedContractEvent<
+      OwnershipTransferStartedEvent.InputTuple,
+      OwnershipTransferStartedEvent.OutputTuple,
+      OwnershipTransferStartedEvent.OutputObject
+    >;
+
+    "OwnershipTransferred(address,address)": TypedContractEvent<
+      OwnershipTransferredEvent.InputTuple,
+      OwnershipTransferredEvent.OutputTuple,
+      OwnershipTransferredEvent.OutputObject
+    >;
+    OwnershipTransferred: TypedContractEvent<
+      OwnershipTransferredEvent.InputTuple,
+      OwnershipTransferredEvent.OutputTuple,
+      OwnershipTransferredEvent.OutputObject
     >;
 
     "PaymentTokenUpdated(address)": TypedContractEvent<

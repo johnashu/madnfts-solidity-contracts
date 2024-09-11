@@ -30,9 +30,13 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.FactoryVerifier__factory>;
     getContractFactory(
-      name: "Owned",
+      name: "Ownable",
       signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.Owned__factory>;
+    ): Promise<Contracts.Ownable__factory>;
+    getContractFactory(
+      name: "Ownable2Step",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.Ownable2Step__factory>;
     getContractFactory(
       name: "TwoFactor",
       signerOrOptions?: ethers.Signer | FactoryOptions
@@ -183,10 +187,15 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.FactoryVerifier>;
     getContractAt(
-      name: "Owned",
+      name: "Ownable",
       address: string | ethers.Addressable,
       signer?: ethers.Signer
-    ): Promise<Contracts.Owned>;
+    ): Promise<Contracts.Ownable>;
+    getContractAt(
+      name: "Ownable2Step",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.Ownable2Step>;
     getContractAt(
       name: "TwoFactor",
       address: string | ethers.Addressable,
@@ -365,9 +374,13 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.FactoryVerifier>;
     deployContract(
-      name: "Owned",
+      name: "Ownable",
       signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.Owned>;
+    ): Promise<Contracts.Ownable>;
+    deployContract(
+      name: "Ownable2Step",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.Ownable2Step>;
     deployContract(
       name: "TwoFactor",
       signerOrOptions?: ethers.Signer | DeployContractOptions
@@ -518,10 +531,15 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.FactoryVerifier>;
     deployContract(
-      name: "Owned",
+      name: "Ownable",
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
-    ): Promise<Contracts.Owned>;
+    ): Promise<Contracts.Ownable>;
+    deployContract(
+      name: "Ownable2Step",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.Ownable2Step>;
     deployContract(
       name: "TwoFactor",
       args: any[],

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity 0.8.22;
+pragma solidity 0.8.23;
 
 import { FactoryVerifier } from "contracts/Shared/EventsAndErrors.sol";
 
@@ -91,4 +91,7 @@ interface IRouter {
 
     function burn(address collection, uint128[] memory _ids, address erc20Token)
         external;
+
+    function transferOwnership(address newOwner) external;
+    function acceptOwnership() external;
 }

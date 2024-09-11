@@ -1,4 +1,4 @@
-pragma solidity 0.8.22;
+pragma solidity 0.8.23;
 
 import "test/lib/forge-std/src/Test.sol";
 import { IERC1155Basic } from

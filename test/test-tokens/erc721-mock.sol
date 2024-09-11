@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 
-pragma solidity 0.8.22;
+pragma solidity 0.8.23;
 
 import { ERC721 } from "contracts/lib/tokens/ERC721/Base/ERC721.sol";
 

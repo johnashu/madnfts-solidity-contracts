@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 
-pragma solidity 0.8.22;
+pragma solidity 0.8.23;
 
 // solhint-disable-next-line
 import { MADBase, IERC20 } from "contracts/Shared/MADBase.sol";

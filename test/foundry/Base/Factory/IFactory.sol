@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity 0.8.22;
+pragma solidity 0.8.23;
 
 import { FactoryTypes } from "contracts/Shared/FactoryTypes.sol";
 
@@ -130,4 +130,7 @@ interface IFactory {
         external
         view
         returns (Fee memory);
+
+    function transferOwnership(address newOwner) external;
+    function acceptOwnership() external;
 }

@@ -3,19 +3,12 @@
 /* eslint-disable */
 
 import { Contract, Interface, type ContractRunner } from "ethers";
-import type { MADBase, MADBaseInterface } from "../../Shared/MADBase";
+import type {
+  Ownable2Step,
+  Ownable2StepInterface,
+} from "../../../lib/auth/Ownable2Step";
 
 const _abi = [
-  {
-    inputs: [],
-    name: "InsufficientBalance",
-    type: "error",
-  },
-  {
-    inputs: [],
-    name: "NotOwnerNorApproved",
-    type: "error",
-  },
   {
     inputs: [
       {
@@ -37,55 +30,6 @@ const _abi = [
     ],
     name: "OwnableUnauthorizedAccount",
     type: "error",
-  },
-  {
-    inputs: [],
-    name: "ZeroAddress",
-    type: "error",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "feeVal2",
-        type: "uint256",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "feeVal3",
-        type: "uint256",
-      },
-    ],
-    name: "FeesUpdated",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "feeVal2",
-        type: "uint256",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "feeVal3",
-        type: "uint256",
-      },
-      {
-        indexed: false,
-        internalType: "address",
-        name: "erc20Token",
-        type: "address",
-      },
-    ],
-    name: "FeesUpdated",
-    type: "event",
   },
   {
     anonymous: false,
@@ -123,32 +67,6 @@ const _abi = [
       },
     ],
     name: "OwnershipTransferred",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "address",
-        name: "newPaymentToken",
-        type: "address",
-      },
-    ],
-    name: "PaymentTokenUpdated",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "address",
-        name: "newRecipient",
-        type: "address",
-      },
-    ],
-    name: "RecipientUpdated",
     type: "event",
   },
   {
@@ -206,12 +124,15 @@ const _abi = [
   },
 ] as const;
 
-export class MADBase__factory {
+export class Ownable2Step__factory {
   static readonly abi = _abi;
-  static createInterface(): MADBaseInterface {
-    return new Interface(_abi) as MADBaseInterface;
+  static createInterface(): Ownable2StepInterface {
+    return new Interface(_abi) as Ownable2StepInterface;
   }
-  static connect(address: string, runner?: ContractRunner | null): MADBase {
-    return new Contract(address, _abi, runner) as unknown as MADBase;
+  static connect(
+    address: string,
+    runner?: ContractRunner | null
+  ): Ownable2Step {
+    return new Contract(address, _abi, runner) as unknown as Ownable2Step;
   }
 }

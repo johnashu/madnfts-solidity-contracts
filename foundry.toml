@@ -23,7 +23,7 @@ gas_limit = "9223372036854775807" # u64::MAX
 via_ir = true
 optimizer_runs = 0xffffffff
 optimizer = true
-solc_version = "0.8.22"
+solc_version = "0.8.23"
 
     # // Version of the EVM to compile for.
     # // Affects type checking and code generation. Can be homestead,

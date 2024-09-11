@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 
-pragma solidity 0.8.22;
+pragma solidity 0.8.23;
 
 //// @title Minimal ERC2981 (NFT Royalty Standard) implementation.
 //// @author Modified from exp.table
@@ -14,7 +14,7 @@ abstract contract ERC2981 {
     uint256 public immutable _royaltyFee;
 
     /// @dev one global recipient for all royalties.
-    address internal _royaltyRecipient;
+    address public immutable _royaltyRecipient;
 
     constructor(uint256 royaltyFee, address royaltyRecipient) {
         _royaltyFee = royaltyFee;

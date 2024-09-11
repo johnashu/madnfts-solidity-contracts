@@ -100,6 +100,7 @@ export interface MADFactoryInterface extends Interface {
   getFunction(
     nameOrSignature:
       | "ADDRESS_ZERO"
+      | "acceptOwnership"
       | "addCollectionType"
       | "collectionCheck"
       | "collectionInfo"
@@ -117,14 +118,16 @@ export interface MADFactoryInterface extends Interface {
       | "invalidateFee"
       | "name"
       | "owner"
+      | "pendingOwner"
       | "recipient"
+      | "renounceOwnership"
       | "router"
       | "setFees(uint256,uint256)"
       | "setFees(uint256,uint256,address)"
-      | "setOwner"
       | "setRecipient"
       | "setRouter"
       | "splitterInfo"
+      | "transferOwnership"
       | "userTokens"
   ): FunctionFragment;
 
@@ -134,7 +137,8 @@ export interface MADFactoryInterface extends Interface {
       | "CollectionTypeAdded"
       | "FeesUpdated(uint256,uint256)"
       | "FeesUpdated(uint256,uint256,address)"
-      | "OwnerUpdated"
+      | "OwnershipTransferStarted"
+      | "OwnershipTransferred"
       | "PaymentTokenUpdated"
       | "RecipientUpdated"
       | "RouterUpdated"
@@ -143,6 +147,10 @@ export interface MADFactoryInterface extends Interface {
 
   encodeFunctionData(
     functionFragment: "ADDRESS_ZERO",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "acceptOwnership",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -207,7 +215,15 @@ export interface MADFactoryInterface extends Interface {
   ): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "pendingOwner",
+    values?: undefined
+  ): string;
   encodeFunctionData(functionFragment: "recipient", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "renounceOwnership",
+    values?: undefined
+  ): string;
   encodeFunctionData(functionFragment: "router", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "setFees(uint256,uint256)",
@@ -216,10 +232,6 @@ export interface MADFactoryInterface extends Interface {
   encodeFunctionData(
     functionFragment: "setFees(uint256,uint256,address)",
     values: [BigNumberish, BigNumberish, AddressLike]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "setOwner",
-    values: [AddressLike]
   ): string;
   encodeFunctionData(
     functionFragment: "setRecipient",
@@ -234,12 +246,20 @@ export interface MADFactoryInterface extends Interface {
     values: [AddressLike, AddressLike]
   ): string;
   encodeFunctionData(
+    functionFragment: "transferOwnership",
+    values: [AddressLike]
+  ): string;
+  encodeFunctionData(
     functionFragment: "userTokens",
     values: [AddressLike, BigNumberish]
   ): string;
 
   decodeFunctionResult(
     functionFragment: "ADDRESS_ZERO",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "acceptOwnership",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -304,7 +324,15 @@ export interface MADFactoryInterface extends Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "pendingOwner",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "recipient", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "renounceOwnership",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "router", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "setFees(uint256,uint256)",
@@ -314,7 +342,6 @@ export interface MADFactoryInterface extends Interface {
     functionFragment: "setFees(uint256,uint256,address)",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "setOwner", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "setRecipient",
     data: BytesLike
@@ -322,6 +349,10 @@ export interface MADFactoryInterface extends Interface {
   decodeFunctionResult(functionFragment: "setRouter", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "splitterInfo",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "transferOwnership",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "userTokens", data: BytesLike): Result;
@@ -414,11 +445,24 @@ export namespace FeesUpdated_uint256_uint256_address_Event {
   export type LogDescription = TypedLogDescription<Event>;
 }
 
-export namespace OwnerUpdatedEvent {
-  export type InputTuple = [user: AddressLike, newOwner: AddressLike];
-  export type OutputTuple = [user: string, newOwner: string];
+export namespace OwnershipTransferStartedEvent {
+  export type InputTuple = [previousOwner: AddressLike, newOwner: AddressLike];
+  export type OutputTuple = [previousOwner: string, newOwner: string];
   export interface OutputObject {
-    user: string;
+    previousOwner: string;
+    newOwner: string;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace OwnershipTransferredEvent {
+  export type InputTuple = [previousOwner: AddressLike, newOwner: AddressLike];
+  export type OutputTuple = [previousOwner: string, newOwner: string];
+  export interface OutputObject {
+    previousOwner: string;
     newOwner: string;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
@@ -536,6 +580,8 @@ export interface MADFactory extends BaseContract {
 
   ADDRESS_ZERO: TypedContractMethod<[], [string], "view">;
 
+  acceptOwnership: TypedContractMethod<[], [void], "nonpayable">;
+
   addCollectionType: TypedContractMethod<
     [index: BigNumberish, impl: BytesLike],
     [void],
@@ -634,7 +680,11 @@ export interface MADFactory extends BaseContract {
 
   owner: TypedContractMethod<[], [string], "view">;
 
+  pendingOwner: TypedContractMethod<[], [string], "view">;
+
   recipient: TypedContractMethod<[], [string], "view">;
+
+  renounceOwnership: TypedContractMethod<[], [void], "nonpayable">;
 
   router: TypedContractMethod<[], [string], "view">;
 
@@ -656,8 +706,6 @@ export interface MADFactory extends BaseContract {
     [void],
     "nonpayable"
   >;
-
-  setOwner: TypedContractMethod<[newOwner: AddressLike], [void], "nonpayable">;
 
   setRecipient: TypedContractMethod<
     [_recipient: AddressLike],
@@ -683,6 +731,12 @@ export interface MADFactory extends BaseContract {
     "view"
   >;
 
+  transferOwnership: TypedContractMethod<
+    [newOwner: AddressLike],
+    [void],
+    "nonpayable"
+  >;
+
   userTokens: TypedContractMethod<
     [collectionOwner: AddressLike, arg1: BigNumberish],
     [string],
@@ -696,6 +750,9 @@ export interface MADFactory extends BaseContract {
   getFunction(
     nameOrSignature: "ADDRESS_ZERO"
   ): TypedContractMethod<[], [string], "view">;
+  getFunction(
+    nameOrSignature: "acceptOwnership"
+  ): TypedContractMethod<[], [void], "nonpayable">;
   getFunction(
     nameOrSignature: "addCollectionType"
   ): TypedContractMethod<
@@ -804,8 +861,14 @@ export interface MADFactory extends BaseContract {
     nameOrSignature: "owner"
   ): TypedContractMethod<[], [string], "view">;
   getFunction(
+    nameOrSignature: "pendingOwner"
+  ): TypedContractMethod<[], [string], "view">;
+  getFunction(
     nameOrSignature: "recipient"
   ): TypedContractMethod<[], [string], "view">;
+  getFunction(
+    nameOrSignature: "renounceOwnership"
+  ): TypedContractMethod<[], [void], "nonpayable">;
   getFunction(
     nameOrSignature: "router"
   ): TypedContractMethod<[], [string], "view">;
@@ -831,9 +894,6 @@ export interface MADFactory extends BaseContract {
     "nonpayable"
   >;
   getFunction(
-    nameOrSignature: "setOwner"
-  ): TypedContractMethod<[newOwner: AddressLike], [void], "nonpayable">;
-  getFunction(
     nameOrSignature: "setRecipient"
   ): TypedContractMethod<[_recipient: AddressLike], [void], "nonpayable">;
   getFunction(
@@ -856,6 +916,9 @@ export interface MADFactory extends BaseContract {
     ],
     "view"
   >;
+  getFunction(
+    nameOrSignature: "transferOwnership"
+  ): TypedContractMethod<[newOwner: AddressLike], [void], "nonpayable">;
   getFunction(
     nameOrSignature: "userTokens"
   ): TypedContractMethod<
@@ -893,11 +956,18 @@ export interface MADFactory extends BaseContract {
     FeesUpdated_uint256_uint256_address_Event.OutputObject
   >;
   getEvent(
-    key: "OwnerUpdated"
+    key: "OwnershipTransferStarted"
   ): TypedContractEvent<
-    OwnerUpdatedEvent.InputTuple,
-    OwnerUpdatedEvent.OutputTuple,
-    OwnerUpdatedEvent.OutputObject
+    OwnershipTransferStartedEvent.InputTuple,
+    OwnershipTransferStartedEvent.OutputTuple,
+    OwnershipTransferStartedEvent.OutputObject
+  >;
+  getEvent(
+    key: "OwnershipTransferred"
+  ): TypedContractEvent<
+    OwnershipTransferredEvent.InputTuple,
+    OwnershipTransferredEvent.OutputTuple,
+    OwnershipTransferredEvent.OutputObject
   >;
   getEvent(
     key: "PaymentTokenUpdated"
@@ -962,15 +1032,26 @@ export interface MADFactory extends BaseContract {
       FeesUpdated_uint256_uint256_address_Event.OutputObject
     >;
 
-    "OwnerUpdated(address,address)": TypedContractEvent<
-      OwnerUpdatedEvent.InputTuple,
-      OwnerUpdatedEvent.OutputTuple,
-      OwnerUpdatedEvent.OutputObject
+    "OwnershipTransferStarted(address,address)": TypedContractEvent<
+      OwnershipTransferStartedEvent.InputTuple,
+      OwnershipTransferStartedEvent.OutputTuple,
+      OwnershipTransferStartedEvent.OutputObject
     >;
-    OwnerUpdated: TypedContractEvent<
-      OwnerUpdatedEvent.InputTuple,
-      OwnerUpdatedEvent.OutputTuple,
-      OwnerUpdatedEvent.OutputObject
+    OwnershipTransferStarted: TypedContractEvent<
+      OwnershipTransferStartedEvent.InputTuple,
+      OwnershipTransferStartedEvent.OutputTuple,
+      OwnershipTransferStartedEvent.OutputObject
+    >;
+
+    "OwnershipTransferred(address,address)": TypedContractEvent<
+      OwnershipTransferredEvent.InputTuple,
+      OwnershipTransferredEvent.OutputTuple,
+      OwnershipTransferredEvent.OutputObject
+    >;
+    OwnershipTransferred: TypedContractEvent<
+      OwnershipTransferredEvent.InputTuple,
+      OwnershipTransferredEvent.OutputTuple,
+      OwnershipTransferredEvent.OutputObject
     >;
 
     "PaymentTokenUpdated(address)": TypedContractEvent<

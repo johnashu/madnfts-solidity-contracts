@@ -1,4 +1,4 @@
-pragma solidity 0.8.22;
+pragma solidity 0.8.23;
 
 import { IERC20 } from "contracts/lib/utils/SafeTransferLib.sol";
 import { IFactory } from "test/foundry/Base/Factory/IFactory.sol";

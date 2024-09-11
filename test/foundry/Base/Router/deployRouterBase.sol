@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity 0.8.22;
+pragma solidity 0.8.23;
 
 import "test/lib/forge-std/src/Test.sol";
 import { IRouter } from "test/foundry/Base/Router/interfaces/IRouter.sol";
@@ -91,7 +91,12 @@ contract DeployRouterBase is
             assertTrue(
                 _router.owner() != address(0), "Owner cannot be address(0)"
             );
-            setAndCheckAddress(_router.setOwner, _router.owner);
+            setAndCheckAddress(
+                _router.transferOwnership,
+                _router.acceptOwnership,
+                _router.owner,
+                true
+            );
 
             // Verify madFactory
             assertTrue(

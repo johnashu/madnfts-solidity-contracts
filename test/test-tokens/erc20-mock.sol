@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-pragma solidity 0.8.22;
+pragma solidity 0.8.23;
 
 /// @notice Modern and gas efficient ERC20 + EIP-2612 implementation.
 /// @author Solmate
@@ -198,7 +198,7 @@ abstract contract ERC20 {
     /*//////////////////////////////////////////////////////////////
                         INTERNAL MINT/BURN LOGIC
     //////////////////////////////////////////////////////////////*/
-    
+
     function _mint(address to, uint256 amount) internal virtual {
         totalSupply = totalSupply + amount;
 

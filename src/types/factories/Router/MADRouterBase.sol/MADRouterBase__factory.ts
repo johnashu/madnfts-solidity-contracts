@@ -36,11 +36,6 @@ const _abi = [
   },
   {
     inputs: [],
-    name: "NotAuthorised",
-    type: "error",
-  },
-  {
-    inputs: [],
     name: "NotCollectionOwner",
     type: "error",
   },
@@ -52,6 +47,28 @@ const _abi = [
   {
     inputs: [],
     name: "NotValidCollection",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "owner",
+        type: "address",
+      },
+    ],
+    name: "OwnableInvalidOwner",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "account",
+        type: "address",
+      },
+    ],
+    name: "OwnableUnauthorizedAccount",
     type: "error",
   },
   {
@@ -146,7 +163,7 @@ const _abi = [
       {
         indexed: true,
         internalType: "address",
-        name: "user",
+        name: "previousOwner",
         type: "address",
       },
       {
@@ -156,7 +173,26 @@ const _abi = [
         type: "address",
       },
     ],
-    name: "OwnerUpdated",
+    name: "OwnershipTransferStarted",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "previousOwner",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "newOwner",
+        type: "address",
+      },
+    ],
+    name: "OwnershipTransferred",
     type: "event",
   },
   {
@@ -234,6 +270,13 @@ const _abi = [
     ],
     name: "TokenFundsWithdrawn",
     type: "event",
+  },
+  {
+    inputs: [],
+    name: "acceptOwnership",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
   },
   {
     inputs: [],
@@ -387,6 +430,19 @@ const _abi = [
   },
   {
     inputs: [],
+    name: "pendingOwner",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
     name: "recipient",
     outputs: [
       {
@@ -396,6 +452,13 @@ const _abi = [
       },
     ],
     stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "renounceOwnership",
+    outputs: [],
+    stateMutability: "nonpayable",
     type: "function",
   },
   {
@@ -456,11 +519,11 @@ const _abi = [
     inputs: [
       {
         internalType: "address",
-        name: "newOwner",
+        name: "_recipient",
         type: "address",
       },
     ],
-    name: "setOwner",
+    name: "setRecipient",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -469,11 +532,11 @@ const _abi = [
     inputs: [
       {
         internalType: "address",
-        name: "_recipient",
+        name: "newOwner",
         type: "address",
       },
     ],
-    name: "setRecipient",
+    name: "transferOwnership",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",

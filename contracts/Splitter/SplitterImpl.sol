@@ -6,7 +6,7 @@
 /// @author Modified from OpenZeppelin Contracts
 /// (https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/finance/PaymentSplitter.sol)
 
-pragma solidity 0.8.22;
+pragma solidity 0.8.23;
 
 import { SplitterEventsAndErrors } from
     "contracts/Splitter/SplitterEventsAndErrors.sol";

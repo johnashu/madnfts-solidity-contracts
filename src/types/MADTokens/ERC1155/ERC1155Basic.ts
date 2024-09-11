@@ -90,6 +90,7 @@ export interface ERC1155BasicInterface extends Interface {
   getFunction(
     nameOrSignature:
       | "_royaltyFee"
+      | "_royaltyRecipient"
       | "balanceOf"
       | "balanceOfBatch"
       | "baseURI"
@@ -120,7 +121,6 @@ export interface ERC1155BasicInterface extends Interface {
       | "mintedByAddress"
       | "publicMintDates"
       | "publicMintLimit"
-      | "publicMintLimitDefault"
       | "publicMintPrice"
       | "publicMintState"
       | "publicMintValues"
@@ -177,6 +177,10 @@ export interface ERC1155BasicInterface extends Interface {
 
   encodeFunctionData(
     functionFragment: "_royaltyFee",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "_royaltyRecipient",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -289,10 +293,6 @@ export interface ERC1155BasicInterface extends Interface {
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "publicMintLimitDefault",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
     functionFragment: "publicMintPrice",
     values: [BigNumberish]
   ): string;
@@ -392,6 +392,10 @@ export interface ERC1155BasicInterface extends Interface {
     functionFragment: "_royaltyFee",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "_royaltyRecipient",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "balanceOfBatch",
@@ -471,10 +475,6 @@ export interface ERC1155BasicInterface extends Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "publicMintLimit",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "publicMintLimitDefault",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -959,6 +959,8 @@ export interface ERC1155Basic extends BaseContract {
 
   _royaltyFee: TypedContractMethod<[], [bigint], "view">;
 
+  _royaltyRecipient: TypedContractMethod<[], [string], "view">;
+
   balanceOf: TypedContractMethod<
     [owner: AddressLike, id: BigNumberish],
     [bigint],
@@ -1105,8 +1107,6 @@ export interface ERC1155Basic extends BaseContract {
   >;
 
   publicMintLimit: TypedContractMethod<[id: BigNumberish], [bigint], "view">;
-
-  publicMintLimitDefault: TypedContractMethod<[], [bigint], "view">;
 
   publicMintPrice: TypedContractMethod<[id: BigNumberish], [bigint], "view">;
 
@@ -1255,6 +1255,9 @@ export interface ERC1155Basic extends BaseContract {
   getFunction(
     nameOrSignature: "_royaltyFee"
   ): TypedContractMethod<[], [bigint], "view">;
+  getFunction(
+    nameOrSignature: "_royaltyRecipient"
+  ): TypedContractMethod<[], [string], "view">;
   getFunction(
     nameOrSignature: "balanceOf"
   ): TypedContractMethod<
@@ -1428,9 +1431,6 @@ export interface ERC1155Basic extends BaseContract {
   getFunction(
     nameOrSignature: "publicMintLimit"
   ): TypedContractMethod<[id: BigNumberish], [bigint], "view">;
-  getFunction(
-    nameOrSignature: "publicMintLimitDefault"
-  ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
     nameOrSignature: "publicMintPrice"
   ): TypedContractMethod<[id: BigNumberish], [bigint], "view">;
