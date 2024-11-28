@@ -40,7 +40,7 @@ const updateSettings = {
   createCollectionSplitter: false,
   createCollectionCollection: false,
   verifyCollectionSplitter: true,
-  verifyErc721: false,
+  verifyErc721: true,
   verifyErc1155: true,
   verifyErc20: false,
 };

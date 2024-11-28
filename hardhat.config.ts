@@ -105,6 +105,24 @@ const chains: Array<NetworkUserConfig> = [
         },
   },
   {
+    chainId: 33139, // APE Chain
+    url: "https://rpc.apechain.com/http",
+    accounts: PK
+      ? [PK]
+      : {
+          mnemonic: MNEMONIC || DEFAULT_MNEMONIC,
+        },
+  },
+  {
+    chainId: 33111, // APE Chain - Curtis Testnet
+    url: "https://curtis.rpc.caldera.xyz/http",
+    accounts: PK
+      ? [PK]
+      : {
+          mnemonic: MNEMONIC || DEFAULT_MNEMONIC,
+        },
+  },
+  {
     chainId: 1564830818, // skale
     url: "https://mainnet.skalenodes.com/v1/honorable-steel-rasalhague",
     accounts: PK
@@ -186,8 +204,10 @@ const config: HardhatUserConfig = {
       mainnet: ETHERSCAN_API_KEY || "",
       goerli: ETHERSCAN_API_KEY || "",
       sepolia: ETHERSCAN_API_KEY || "",
-      base: ETHERSCAN_API_KEY,
-      baseSepolia: ETHERSCAN_API_KEY,
+      base: ETHERSCAN_API_KEY || "",
+      baseSepolia: ETHERSCAN_API_KEY || "",
+      apeChain: ETHERSCAN_API_KEY || "",
+      apeChainCurtis: ETHERSCAN_API_KEY || "",
     },
     customChains: [
       {
@@ -204,6 +224,22 @@ const config: HardhatUserConfig = {
         urls: {
           apiURL: "https://api-sepolia.basescan.org/api",
           browserURL: "https://sepolia.basescan.org",
+        },
+      },
+      {
+        network: "apeChain",
+        chainId: 33139,
+        urls: {
+          apiURL: "https://apechain.calderachain.xyz/http",
+          browserURL: "https://apechain.calderaexplorer.xyz/",
+        },
+      },
+      {
+        network: "apeChainCurtis",
+        chainId: 33111,
+        urls: {
+          apiURL: "https://curtis.rpc.caldera.xyz/http",
+          browserURL: "https://curtis.explorer.caldera.xyz",
         },
       },
       {
@@ -250,6 +286,8 @@ const config: HardhatUserConfig = {
   networks: {
     base: getChainConfig(8453),
     baseSepolia: getChainConfig(84532),
+    apeChain: getChainConfig(33139),
+    apeChainCurtis: getChainConfig(33111),
     harmony: getChainConfig(1666600000),
     harmonyDevnet: getChainConfig(1666900000),
     serv: getChainConfig(43970),

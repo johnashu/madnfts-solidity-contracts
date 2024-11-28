@@ -174,7 +174,7 @@ contract MADRouter is MADRouterBase {
      * @param _id Token ID.
      * @param _amount Num tokens to mint and send.
      * @param _maxSupply Max supply of the id.
-     * @custom:signature mintTo(address,address,uint256,uint256)
+     * @custom:signature mintTo(address,address,uint256,uint256,uint256)
      * @custom:selector 0x292af4be
      */
     function mintTo(

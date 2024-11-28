@@ -23,6 +23,12 @@ Deployed Factory Address: 0x8BCE4F2f79f3d38B2e68766F67E01c887504aFd9
 Deployed Router Address: 0xD99e2bfa45dD76325cc789F43210e262c9Ce7197
 Deployed ERC20 Address:
 
+## APE Chain Curtis Testnet
+
+Deployed Factory Address: 0x517ddB4d8e0844A6A781446303496Aa6Ab2f9619
+Deployed Router Address: 0x5e31b034aD90BE2e0F5D45e02c68E0f6e00A69e2
+Deployed ERC20 Address:
+
 ## Sepolia BASE
 
 Deployed Factory Address: 0xC29A0F9792c41Bfb58324aDd19Ba305f64DBBC7D

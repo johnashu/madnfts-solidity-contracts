@@ -11,7 +11,7 @@
     "@nomicfoundation/hardhat-ethers": "^3.0.5",
     "@nomicfoundation/hardhat-ignition-ethers": "^0.13.1",
     "@nomicfoundation/hardhat-ignition": "^0.13.1",
-    "@nomicfoundation/ignition-core":"^0.13.1",
+    "@nomicfoundation/ignition-core": "^0.13.1",
     "@nomicfoundation/hardhat-network-helpers": "^1.0.10",
     "@nomicfoundation/hardhat-toolbox": "^4.0.0",
     "@nomicfoundation/hardhat-verify": "^2.0.3",
@@ -44,7 +44,7 @@
     "chai": "^4.2.0",
     "ethers": "^6.11.1",
     "hardhat": "^2.20.1",
-    "hardhat-gas-reporter":"^1.0.8"
+    "hardhat-gas-reporter": "^1.0.8"
   },
   "files": [
     "contracts"
@@ -66,6 +66,8 @@
   "scripts": {
     "deploy:base": "hardhat run scripts/deploy.ts --network base",
     "deploy:baseSepolia": "hardhat run scripts/deploy.ts --network baseSepolia",
+    "deploy:apeChainCurtis": "hardhat run scripts/deploy.ts --network apeChainCurtis",
+    "deploy:apeChain": "hardhat run scripts/deploy.ts --network apeChain",
     "deploy:harmony": "hardhat run scripts/deploy.ts --network harmony",
     "deploy:harmonyDevnet": "hardhat run scripts/deploy.ts --network harmonyDevnet",
     "deploy:polygon": "hardhat run scripts/deploy.ts --network polygon",
